@@ -1,0 +1,9 @@
+{
+  "name": "智能康复臂带家属端",
+  "short_name": "康复家属端",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f2f2f7",
+  "theme_color": "#ff2d55",
+  "icons": []
+}

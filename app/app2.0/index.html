@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ff2d55" />
+    <title>康复臂带家属端 2.0</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="flow-bg" aria-hidden="true">
+      <span class="flow-layer layer-train"></span>
+      <span class="flow-layer layer-health"></span>
+      <span class="flow-layer layer-soft"></span>
+    </div>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">智能康复臂带</p>
+          <h1 id="pageTitle">家属端</h1>
+          <div class="theme-line">
+            <span class="theme-dot" aria-hidden="true"></span>
+            <strong>AI赋能设计，设计点亮AI</strong>
+          </div>
+        </div>
+        <button class="icon-button" id="refreshBtn" title="刷新数据" aria-label="刷新数据">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-3M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 3m.5 3v-4h-4"/></svg>
+        </button>
+      </header>
+
+      <main>
+        <section class="page active" id="homePage" data-title="家属端">
+          <div class="home-hero">
+            <div>
+              <p class="eyebrow">Family Health</p>
+              <h2>家属康复看板</h2>
+              <span>训练记录与健康记录分区呈现，方便家属快速了解康复变化。</span>
+            </div>
+            <div class="hero-orbit" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.2C.8 8.4 2.9 4.5 6.5 4.5c2 0 3.3 1.1 4.1 2.3.3.5 1.1.5 1.4 0 .8-1.2 2.1-2.3 4.1-2.3 3.6 0 5.7 3.9 4.1 7.3C19.5 16.3 12 21 12 21Z"/><path d="M7.4 12h2.2l1.3-3.1 2.2 6.3 1.4-3.2h2.1"/></svg>
+            </div>
+          </div>
+
+          <div class="track-grid">
+            <article class="track-card train">
+              <span>训练记录</span>
+              <strong>动作表现 · 评分趋势</strong>
+            </article>
+            <article class="track-card health">
+              <span>健康记录</span>
+              <strong>心率血氧 · 疲劳状态</strong>
+            </article>
+          </div>
+
+          <div class="status-band">
+            <div class="stat-health"><span>康复指数</span><strong id="recoveryIndex">--</strong></div>
+            <div class="stat-train"><span>最近评分</span><strong id="lastScore">--</strong></div>
+            <div class="stat-neutral"><span>记录数</span><strong id="recordCount">--</strong></div>
+          </div>
+
+          <div class="section-head">
+            <h2>训练概览</h2>
+            <span id="lastUpdate">未刷新</span>
+          </div>
+          <div class="metric-grid train-metrics">
+            <article class="metric"><span>最近动作</span><strong id="lastAction">暂无</strong></article>
+            <article class="metric"><span>完成次数</span><strong id="lastReps">--</strong></article>
+            <article class="metric"><span>完成度</span><strong id="lastCompletion">--</strong></article>
+            <article class="metric"><span>最大角度</span><strong id="lastAngle">--</strong></article>
+          </div>
+
+          <div class="panel advice-panel">
+            <div class="section-head tight">
+              <h2>重点建议</h2>
+              <span id="mainProblem">--</span>
+            </div>
+            <div id="homeAdvice" class="advice-list"></div>
+          </div>
+
+          <div class="panel health-panel">
+            <div class="section-head tight">
+              <h2>最近健康</h2>
+              <span id="healthTime">--</span>
+            </div>
+            <div class="health-strip">
+              <div><span>心率</span><strong id="heartRate">--</strong></div>
+              <div><span>血氧</span><strong id="spo2">--</strong></div>
+              <div><span>疲劳度</span><strong id="fatigue">--</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page live-page" id="livePage" data-title="实时数据">
+          <div class="live-hero">
+            <div>
+              <p class="eyebrow">Live Training</p>
+              <h2 id="liveAction">等待设备数据</h2>
+              <span id="liveTime">--</span>
+            </div>
+            <span class="live-state" id="liveState">离线 / 等待连接</span>
+          </div>
+          <div class="live-grid">
+            <article class="live-card live-angle-card">
+              <span id="liveAngleName">动作角度</span>
+              <strong id="liveAngle">--</strong>
+            </article>
+            <article class="live-card">
+              <span>肌电识别</span>
+              <strong class="live-emg offline" id="liveEmg">--</strong>
+              <small>强度 <b id="liveEmgStrength">--</b></small>
+            </article>
+            <article class="live-card">
+              <span>完成度</span>
+              <strong id="liveCompletion">--</strong>
+              <div class="live-progress"><i id="liveCompletionFill"></i></div>
+            </article>
+            <article class="live-card"><span>完成次数</span><strong id="liveReps">-- / --</strong></article>
+            <article class="live-card"><span>实时评分</span><strong id="liveScore">--</strong></article>
+            <article class="live-card health"><span>心率 / 血氧</span><strong><b id="liveHeart">--</b> · <b id="liveSpo2">--</b></strong></article>
+          </div>
+          <div class="live-devices">
+            <div><span>上臂端</span><strong id="liveUpper">未连接</strong></div>
+            <div><span>手腕端</span><strong id="liveWrist">未连接</strong></div>
+          </div>
+          <p class="live-note">在线时每 2 秒刷新；离线后仍可查看已保存的历史记录。</p>
+        </section>
+
+        <section class="page training-page" id="historyPage" data-title="历史训练">
+          <div class="toolbar">
+            <select id="actionFilter" aria-label="动作筛选"><option value="">全部动作</option></select>
+            <select id="sortMode" aria-label="排序方式">
+              <option value="date_desc">最新优先</option>
+              <option value="score_desc">评分最高</option>
+              <option value="score_asc">评分最低</option>
+            </select>
+          </div>
+          <div id="historyList" class="record-list"></div>
+        </section>
+
+        <section class="page health-page" id="healthPage" data-title="健康记录">
+          <div class="summary-card health-summary">
+            <span>健康记录</span>
+            <strong id="healthCount">0 条</strong>
+            <p>展示腕端健康模块保存的历史数据。</p>
+          </div>
+          <div id="healthList" class="record-list"></div>
+        </section>
+
+        <section class="page" id="trendPage" data-title="趋势分析">
+          <div class="chart-panel">
+            <div class="section-head tight">
+              <h2>评分趋势</h2>
+              <span>最近记录</span>
+            </div>
+            <canvas id="scoreChart" width="640" height="300"></canvas>
+          </div>
+          <div class="chart-panel">
+            <div class="section-head tight">
+              <h2>动作表现</h2>
+              <span id="weakAction">--</span>
+            </div>
+            <div id="actionAnalysis" class="analysis-list"></div>
+          </div>
+        </section>
+
+        <section class="page" id="modelPage" data-title="AI建议">
+          <div class="ai-tool-card model-hero">
+            <div class="ai-tool-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.2C.8 8.4 2.9 4.5 6.5 4.5c2 0 3.3 1.1 4.1 2.3.3.5 1.1.5 1.4 0 .8-1.2 2.1-2.3 4.1-2.3 3.6 0 5.7 3.9 4.1 7.3C19.5 16.3 12 21 12 21Z"/><path d="M7.4 12h2.2l1.3-3.1 2.2 6.3 1.4-3.2h2.1"/></svg>
+            </div>
+            <div>
+              <strong>智能康复建议</strong>
+              <span>把训练和健康数据转化为更容易理解的家属观察建议</span>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-head tight">
+              <h2>API 模型建议</h2>
+              <span>调用 /api/ai_chat</span>
+            </div>
+            <p class="hint">根据后端已有训练数据生成康复训练建议。建议仅供训练参考，不替代医生诊断。</p>
+            <div class="quick-prompts">
+              <button class="quick-prompt" data-prompt="请根据最近训练记录，给家属一段简短的康复观察建议。">家属摘要</button>
+              <button class="quick-prompt" data-prompt="请分析最近训练中的薄弱动作，并给出下一步训练重点。">薄弱动作</button>
+              <button class="quick-prompt" data-prompt="请根据训练评分、完成度和健康记录，给出三条安全注意事项。">安全注意</button>
+            </div>
+          </div>
+          <div class="chat-panel" id="modelMessages"></div>
+          <div class="chat-input">
+            <textarea id="modelInput" rows="3" placeholder="输入想咨询的问题，例如：最近训练效果怎么样？"></textarea>
+            <button class="primary" id="sendModelBtn">发送</button>
+          </div>
+        </section>
+
+        <section class="page" id="settingsPage" data-title="设置">
+          <div class="panel">
+            <h2>服务端地址</h2>
+            <p class="hint">默认通过本 App 代理读取 Flask，不修改现有后端和 JSON 数据。</p>
+            <label class="field">
+              <span>API 地址</span>
+              <input id="apiBaseInput" type="url" placeholder="留空使用 /proxy，例如 http://192.168.1.8:5000" />
+            </label>
+            <button class="primary" id="saveSettingsBtn">保存并刷新</button>
+          </div>
+          <div class="panel">
+            <h2>连接状态</h2>
+            <p id="connectionState" class="connection">等待刷新</p>
+          </div>
+        </section>
+      </main>
+
+      <nav class="tabbar" aria-label="主导航">
+        <button class="tab active" data-page="homePage"><span class="tab-icon">⌂</span><span>首页</span></button>
+        <button class="tab" data-page="livePage"><span class="tab-icon">●</span><span>实时</span></button>
+        <button class="tab" data-page="historyPage"><span class="tab-icon">≡</span><span>历史</span></button>
+        <button class="tab" data-page="healthPage"><span class="tab-icon">♡</span><span>健康</span></button>
+        <button class="tab" data-page="trendPage"><span class="tab-icon">↗</span><span>趋势</span></button>
+        <button class="tab" data-page="modelPage"><span class="tab-icon">AI</span><span>建议</span></button>
+        <button class="tab" data-page="settingsPage"><span class="tab-icon">⚙</span><span>设置</span></button>
+      </nav>
+    </div>
+
+    <dialog id="detailDialog">
+      <div class="dialog-head">
+        <strong id="detailTitle">训练详情</strong>
+        <button class="icon-button small" id="closeDialogBtn" aria-label="关闭">×</button>
+      </div>
+      <div id="detailBody" class="detail-body"></div>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "rehab-family-app",
+  "version": "2.0.0",
+  "private": true,
+  "description": "智能康复臂带家属端 2.0：本地历史、增量同步与实时数据",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

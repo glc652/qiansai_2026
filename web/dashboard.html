@@ -1,0 +1,1837 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>上肢康复训练实时监控终端</title>
+  <style>
+    :root {
+      --bg0: #07101d;
+      --bg1: #091826;
+      --bg2: #0b1220;
+      --glass: rgba(13, 29, 51, 0.58);
+      --glass-strong: rgba(18, 42, 73, 0.68);
+      --line: rgba(91, 182, 255, 0.22);
+      --text: #f7fbff;
+      --muted: #9db0c9;
+      --dim: #64748b;
+      --blue: #2f80ff;
+      --blue2: #5bb6ff;
+      --green: #39e5a7;
+      --yellow: #ffd166;
+      --red: #ff4d6d;
+      --font: Inter, "HarmonyOS Sans SC", "Source Han Sans SC", "Microsoft YaHei", Arial, sans-serif;
+      --num: "DIN Alternate", "DIN Condensed", Bahnschrift, Inter, sans-serif;
+    }
+    body.theme-light {
+      --bg0: #f2f2f7;
+      --bg1: #f7f7fa;
+      --bg2: #ffffff;
+      --glass: rgba(255, 255, 255, 0.88);
+      --glass-strong: rgba(255, 255, 255, 0.96);
+      --line: #e5e5ea;
+      --text: #111114;
+      --muted: #767680;
+      --dim: #8e8e93;
+      --blue: #0a84ff;
+      --blue2: #5ac8fa;
+      --green: #34c759;
+      --yellow: #ff9500;
+      --red: #ff375f;
+    }
+
+    @property --pct {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
+    @property --angle-pct {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font);
+      background:
+        radial-gradient(circle at 18% 6%, rgba(47, 128, 255, 0.22), transparent 30%),
+        radial-gradient(circle at 82% 14%, rgba(57, 229, 167, 0.10), transparent 26%),
+        linear-gradient(135deg, var(--bg0), var(--bg1) 46%, var(--bg2));
+      overflow-x: hidden;
+      animation: fadeIn 520ms ease both;
+    }
+    body.theme-light {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.72), rgba(242,242,247,.88)), #f2f2f7;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(91,182,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(91,182,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.75), transparent 82%);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(110deg, transparent 0 42%, rgba(91,182,255,.055) 48%, transparent 54% 100%);
+      animation: scan 7s linear infinite;
+      opacity: .55;
+    }
+    body.theme-light::before {
+      inset: -18%;
+      background:
+        radial-gradient(ellipse 36% 34% at 10% 18%, rgba(10,132,255,.30), rgba(90,200,250,.10) 56%, transparent 72%),
+        radial-gradient(ellipse 31% 36% at 88% 20%, rgba(255,55,95,.25), rgba(255,159,10,.10) 56%, transparent 72%),
+        radial-gradient(ellipse 35% 30% at 67% 86%, rgba(175,82,222,.17), transparent 72%),
+        radial-gradient(ellipse 26% 28% at 25% 82%, rgba(255,159,10,.11), transparent 72%);
+      background-size: 115% 115%, 120% 120%, 118% 118%, 124% 124%;
+      filter: blur(34px) saturate(132%);
+      mask-image: none;
+      opacity: 1;
+      animation: lightAurora 18s ease-in-out infinite alternate;
+      will-change: transform, background-position;
+    }
+    body.theme-light::after {
+      inset: -12%;
+      background:
+        radial-gradient(ellipse 38% 18% at 48% 38%, rgba(255,255,255,.72), transparent 72%),
+        linear-gradient(116deg, transparent 25%, rgba(10,132,255,.08) 42%, rgba(255,55,95,.08) 54%, transparent 72%);
+      filter: blur(26px);
+      opacity: .68;
+      animation: lightRibbon 14s cubic-bezier(.45,.05,.55,.95) infinite alternate;
+      will-change: transform;
+    }
+
+    .shell { width: min(1500px, calc(100vw - 42px)); margin: 0 auto; padding: 22px 0 30px; position: relative; z-index: 1; }
+    .topbar { min-height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .logo { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(145deg, #2f80ff, #5bb6ff); box-shadow: 0 0 28px rgba(47,128,255,.62), inset 0 1px 0 rgba(255,255,255,.35); font-weight: 900; animation: logoGlow 3.8s ease-in-out infinite; }
+    .brand h1 { margin: 0; font-size: 20px; line-height: 1.1; letter-spacing: 0; white-space: nowrap; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .brand-slogan { position: relative; display: grid; gap: 2px; padding-left: 12px; opacity: .88; animation: sloganIn 900ms cubic-bezier(.2,.82,.2,1) 140ms both; }
+    .brand-slogan::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; border-radius: 999px; background: linear-gradient(180deg, #4da3ff, #6ee7ff); box-shadow: 0 0 14px rgba(77,163,255,.72); }
+    .slogan-cn { color: rgba(255,255,255,.92); font-size: 17px; line-height: 1.25; font-weight: 650; white-space: nowrap; }
+    .slogan-en { color: rgba(255,255,255,.60); font-size: 13px; line-height: 1.2; white-space: nowrap; }
+    body.theme-light .slogan-cn { color: rgba(18,32,51,.86); }
+    body.theme-light .slogan-en { color: rgba(18,32,51,.58); }
+    .ai-word { display: inline-block; color: transparent; background: linear-gradient(90deg, #4da3ff 0%, #6ee7ff 38%, rgba(255,255,255,.95) 50%, #6ee7ff 62%, #4da3ff 100%); background-size: 260% 100%; background-position: 0 0; -webkit-background-clip: text; background-clip: text; vertical-align: baseline; animation: aiSweep 4s ease-in-out infinite; }
+    .top-status { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.06); backdrop-filter: blur(18px); color: #d7e8ff; font-size: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--dim); box-shadow: 0 0 12px currentColor; }
+    .dot.on { background: var(--green); color: var(--green); animation: wink 1.6s ease-in-out infinite; }
+    .dot.live { background: var(--red); color: var(--red); animation: breathe 1.2s ease-in-out infinite; }
+
+    .page { display: none; animation: rise .36s ease both; }
+    .page.active { display: block; }
+    .glass { border: 1px solid var(--line); background: linear-gradient(145deg, rgba(19, 43, 76, .68), rgba(9, 18, 33, .48)); backdrop-filter: blur(22px); box-shadow: 0 20px 70px rgba(0,0,0,.34), 0 0 34px rgba(47,128,255,.10), inset 0 1px 0 rgba(255,255,255,.10); }
+    body.theme-light .glass { border-color:rgba(202,208,220,.62); background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,255,255,.56)); box-shadow:0 18px 48px rgba(41,58,84,.09),inset 0 1px 0 rgba(255,255,255,.90); backdrop-filter:blur(24px) saturate(132%); }
+    .card { border-radius: 8px; transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(110,231,255,.58); box-shadow: 0 26px 80px rgba(0,0,0,.38), 0 0 48px rgba(77,163,255,.22), inset 0 1px 0 rgba(255,255,255,.14); }
+
+    .hud { display: grid; grid-template-columns: minmax(0, .82fr) minmax(500px, 1.36fr) minmax(330px, .82fr); gap: 16px; align-items: stretch; }
+    .realtime-layout { grid-template-columns: minmax(560px, 1fr) minmax(420px, 1fr); align-items: stretch; }
+    .stack { display: grid; gap: 16px; align-content: start; }
+    .home-grid { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(390px, .78fr); gap: 18px; align-items: stretch; }
+    .home-hero { min-height: min(780px, calc(100vh - 128px)); padding: clamp(34px, 4.4vw, 66px); border-radius: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; border-color: rgba(91,182,255,.20); background: linear-gradient(135deg, rgba(19,48,82,.82), rgba(8,22,39,.70) 58%, rgba(8,31,48,.78)); }
+    .home-hero::before { content: ""; position: absolute; width:520px; height:520px; right:-180px; top:-220px; border-radius:50%; pointer-events:none; background:radial-gradient(circle, rgba(96,216,255,.20), rgba(47,128,255,.06) 42%, transparent 70%); filter:blur(4px); }
+    .home-hero::after { content: ""; position: absolute; inset:0; pointer-events:none; background:linear-gradient(115deg, transparent 0 48%, rgba(255,255,255,.035) 48.5%, transparent 49%); opacity:.8; }
+    .home-hero > :not(.hero-ambient) { position: relative; z-index: 2; }
+    .hero-ambient { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+    .hero-ambient span { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(110,231,255,.28); box-shadow: 0 0 24px rgba(110,231,255,.42); animation: floatGlow 10s ease-in-out infinite; }
+    .hero-ambient span:nth-child(1) { left: 14%; top: 18%; animation-delay: -1s; }
+    .hero-ambient span:nth-child(2) { left: 62%; top: 24%; width: 11px; height: 11px; background: rgba(77,163,255,.20); animation-delay: -4s; }
+    .hero-ambient span:nth-child(3) { left: 82%; top: 62%; width: 6px; height: 6px; animation-delay: -7s; }
+    .home-title { margin: 0; max-width: 600px; font-size: clamp(38px, 3.7vw, 56px); line-height: 1.14; letter-spacing: -.025em; font-weight: 720; text-wrap: balance; }
+    .home-title .line { display: block; }
+    .home-copy { margin: 24px 0 0; max-width: 520px; color: #aebed2; font-size: 15px; line-height: 1.9; text-wrap: pretty; }
+    .home-actions { justify-content: flex-start; margin-top: 32px; }
+    .home-actions button { min-height: 46px; padding-inline: 20px; border-radius:13px; }
+    .home-actions .primary { padding-inline:26px; box-shadow:0 14px 36px rgba(47,128,255,.32); }
+    .home-intro { position: relative; z-index: 2; max-width:570px; padding-top:clamp(32px,5vh,58px); }
+    .home-intro > .kicker { display:flex; align-items:center; gap:12px; margin-bottom:22px; letter-spacing:.18em; }
+    .home-intro > .kicker::before { content:""; width:28px; height:1px; background:var(--blue2); box-shadow:0 0 10px rgba(91,182,255,.45); }
+    .home-footnote { position: relative; z-index: 2; display: grid; grid-template-columns:repeat(4,1fr); gap: 8px; padding-top: 22px; border-top: 1px solid rgba(91,182,255,.15); color: var(--muted); font-size: 11px; }
+    .home-footnote > div { padding:8px 12px; border-left:1px solid rgba(91,182,255,.18); }
+    .home-footnote strong { display: block; margin-bottom: 5px; color: var(--text); font-size: 13px; font-weight: 650; }
+    .home-side { display:grid; grid-template-rows:auto 370px; gap:14px; align-content:start; min-height:0; }
+    .home-overview { padding: 26px; border-radius: 20px; background:linear-gradient(145deg,rgba(18,42,70,.78),rgba(8,22,38,.58)); }
+    .home-overview-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; }
+    .home-overview-head h3 { margin: 5px 0 0; font-size: 22px; }
+    .home-device-list { display:grid; }
+    .home-device { display:grid; grid-template-columns: 42px minmax(0,1fr) auto; gap:14px; align-items:center; padding:18px 0; border-top:1px solid rgba(91,182,255,.14); }
+    .home-device .icon { width:38px; height:38px; border-radius:12px; background:linear-gradient(145deg,rgba(91,182,255,.16),rgba(47,128,255,.07)); }
+    .home-device-name { color:var(--muted); font-size:12px; }
+    .home-device-value { margin-top:4px; color:var(--text); font-size:18px; font-weight:700; }
+    .home-device-meta { color:var(--muted); font-size:12px; text-align:right; }
+    .home-quick-grid { display:grid; grid-template-columns:1.08fr .92fr; gap:14px; height:370px; }
+    .home-quick { min-height:0; padding:22px; border-radius:20px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; background:linear-gradient(155deg,rgba(16,39,66,.78),rgba(8,22,38,.54)); }
+    .home-quick:first-child { background:linear-gradient(155deg,rgba(17,53,76,.82),rgba(8,25,40,.58)); }
+    .home-quick:hover { transform:translateY(-2px); border-color:rgba(91,182,255,.42); }
+    .home-quick .value { font-size:clamp(34px,3vw,48px); text-shadow:none; }
+    .home-quick-link { color:var(--blue2); font-size:12px; font-weight:700; }
+    .rehab-visual { position:absolute; left:calc(100% - 285px); right:auto; top:clamp(38px,5vw,72px); width:190px; height:190px; z-index:1; opacity:.76; }
+    .rehab-ring { position:absolute; inset:0; border:1px solid rgba(110,231,255,.18); border-radius:50%; }
+    .rehab-ring::before,.rehab-ring::after { content:""; position:absolute; border-radius:50%; border:1px solid rgba(91,182,255,.14); }
+    .rehab-ring::before { inset:22px; }
+    .rehab-ring::after { inset:48px; }
+    .rehab-arm { position:absolute; left:74px; top:34px; width:42px; height:118px; transform:rotate(28deg); }
+    .rehab-arm span { position:absolute; left:18px; width:5px; border-radius:8px; background:linear-gradient(#78ddff,#398bff); box-shadow:0 0 18px rgba(91,182,255,.48); }
+    .rehab-arm span:first-child { height:53px; top:7px; transform:rotate(-16deg); transform-origin:bottom; }
+    .rehab-arm span:last-child { height:57px; bottom:2px; transform:rotate(25deg); transform-origin:top; }
+    .rehab-arm i { position:absolute; left:11px; top:52px; width:19px; height:19px; border-radius:50%; background:#7ce4ff; border:5px solid rgba(29,85,130,.8); box-shadow:0 0 24px rgba(110,231,255,.65); z-index:2; }
+    .rehab-caption { display:none; }
+    body.theme-light .glass.home-hero { border-color:rgba(199,208,224,.64); background:linear-gradient(138deg,rgba(255,255,255,.79),rgba(247,251,255,.58) 54%,rgba(240,247,255,.50)); box-shadow:0 24px 64px rgba(37,58,88,.10),inset 0 1px 0 rgba(255,255,255,.92); }
+    body.theme-light .home-hero::before { width:620px; height:620px; right:-190px; top:-240px; background:radial-gradient(circle,rgba(10,132,255,.24),rgba(90,200,250,.09) 45%,transparent 70%); }
+    body.theme-light .home-hero::after { background:linear-gradient(115deg,transparent 0 47%,rgba(10,132,255,.038) 48%,rgba(255,55,95,.018) 49%,transparent 51%); }
+    body.theme-light .glass.home-overview { border-color:rgba(202,208,220,.66); background:linear-gradient(145deg,rgba(255,255,255,.80),rgba(247,250,255,.58)); box-shadow:0 16px 42px rgba(37,58,88,.08),inset 0 1px 0 rgba(255,255,255,.94); }
+    body.theme-light .glass.home-quick { border-color:rgba(202,208,220,.64); background:linear-gradient(150deg,rgba(255,255,255,.77),rgba(237,247,255,.58)); box-shadow:0 16px 42px rgba(37,58,88,.08),inset 0 1px 0 rgba(255,255,255,.92); }
+    body.theme-light .glass.home-quick:first-child { background:linear-gradient(150deg,rgba(255,255,255,.79),rgba(255,236,241,.50)); }
+    body.theme-light .home-quick:first-child .icon { color:#ee5672; border-color:rgba(238,86,114,.16); background:rgba(238,86,114,.065); }
+    body.theme-light .home-quick:first-child .home-quick-link { color:#e94d69; }
+    body.theme-light .home-footnote { border-top-color:rgba(82,133,199,.18); }
+    body.theme-light .home-footnote > div { border-left-color:rgba(82,133,199,.18); }
+    body.theme-light .home-device-value { color:#111114; }
+    body.theme-light .home-copy { color:#767680; }
+    body.theme-light .rehab-ring { border-color:rgba(57,139,219,.17); }
+    body.theme-light .rehab-ring::before, body.theme-light .rehab-ring::after { border-color:rgba(57,139,219,.14); }
+    .metric { min-height: 120px; padding: 18px; position: relative; overflow: hidden; }
+    .metric::after { content: ""; position: absolute; inset: auto -20% -60% -20%; height: 90%; background: radial-gradient(circle, rgba(91,182,255,.16), transparent 60%); pointer-events: none; }
+    .metric-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
+    .icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: rgba(91,182,255,.10); border: 1px solid rgba(91,182,255,.22); color: var(--blue2); }
+    .value { margin-top: 12px; font-family: var(--num); font-size: clamp(34px, 4vw, 58px); line-height: .92; font-weight: 800; color: #fafdff; text-shadow: 0 0 28px rgba(91,182,255,.45); letter-spacing: 0; }
+    .unit { margin-left: 5px; color: var(--muted); font-size: 15px; font-family: var(--font); font-weight: 700; }
+    .sub { margin-top: 9px; color: var(--muted); font-size: 12px; }
+    .emg-value { font-family: var(--font); font-size: clamp(30px, 3.2vw, 46px); letter-spacing: 0; }
+    .emg-value.relax { color: var(--green); text-shadow: 0 0 24px rgba(57,229,167,.34); }
+    .emg-value.weak { color: var(--yellow); text-shadow: 0 0 24px rgba(255,202,92,.30); }
+    .emg-value.strong { color: var(--red); text-shadow: 0 0 24px rgba(255,91,110,.32); }
+    .emg-value.disabled { color: var(--muted); text-shadow: none; font-size: clamp(22px, 2.4vw, 32px); }
+    body:not(.theme-light) .value.emg-value.weak {
+      color: #e8c978;
+      text-shadow: 0 0 18px rgba(232,201,120,.20);
+    }
+    .emg-track { position: relative; z-index: 2; height: 9px; margin-top: 14px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.08); }
+    .emg-fill { width: var(--emg, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--green), var(--blue2)); box-shadow: 0 0 18px rgba(91,182,255,.38); transition: width 420ms ease, background 220ms ease; }
+    .emg-fill.weak { background: linear-gradient(90deg, var(--green), var(--yellow)); }
+    .emg-fill.strong { background: linear-gradient(90deg, var(--yellow), var(--red)); }
+    body:not(.theme-light) .emg-fill.weak { background: linear-gradient(90deg, var(--green), #d8b45f); }
+    body:not(.theme-light) .emg-fill.strong { background: linear-gradient(90deg, #d8b45f, var(--red)); }
+    body.theme-light .emg-track { background: rgba(47,128,255,.08); border-color: #d6e8ff; }
+
+    .center-panel { min-height: 410px; padding: 18px; position: relative; overflow: hidden; border-radius: 8px; display: grid; align-content: space-between; gap: 18px; }
+    .training-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: relative; z-index: 2; }
+    .kicker { margin: 0; color: var(--blue2); font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+    .action-name { margin: 4px 0 0; font-size: 26px; line-height: 1.1; font-weight: 850; }
+    .angle-hero { text-align: right; }
+    .angle-hero .label { color: var(--muted); font-size: 12px; }
+    .angle-hero strong { display: block; font-family: var(--num); font-size: clamp(58px, 8vw, 112px); line-height: .86; letter-spacing: 0; color: #fff; text-shadow: 0 0 44px rgba(47,128,255,.72); }
+    .angle-hero span { color: var(--blue2); font-size: 20px; font-weight: 800; }
+
+    .angle-dashboard { min-height: 238px; display: grid; grid-template-columns: 230px 1fr; gap: 24px; align-items: center; }
+    .angle-ring-large { width: 230px; height: 230px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--blue2) var(--angle-pct, 0deg), rgba(255,255,255,.075) 0deg); position: relative; box-shadow: 0 0 46px rgba(47,128,255,.24); transition: --angle-pct 980ms cubic-bezier(.22,.9,.22,1); }
+    .angle-ring-large::before { content: ""; position: absolute; inset: 18px; border-radius: 50%; background: #091523; border: 1px solid rgba(91,182,255,.24); }
+    .angle-ring-large::after { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 1px solid rgba(91,182,255,.20); border-right-color: rgba(57,229,167,.75); animation: rotate 7s linear infinite; }
+    .angle-ring-large strong { position: relative; font-family: var(--num); font-size: 68px; line-height: .9; text-shadow: 0 0 34px rgba(91,182,255,.62); }
+    .angle-ring-large span { position: relative; color: var(--blue2); font-weight: 850; }
+    .motion-bars { display: grid; gap: 13px; }
+    .motion-row { display: grid; grid-template-columns: 92px 1fr 56px; gap: 12px; align-items: center; color: var(--muted); font-size: 13px; }
+    .motion-track { height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .motion-fill { height: 100%; width: var(--v, 0%); border-radius: inherit; background: linear-gradient(90deg, var(--blue), var(--blue2)); box-shadow: 0 0 20px rgba(91,182,255,.52); transition: width 900ms cubic-bezier(.22,.9,.22,1); }
+
+    .chart-panel, .imu-panel, .score-panel, .history-panel { padding: 16px; border-radius: 8px; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .panel-head h2, .panel-head h3 { margin: 0; font-size: 16px; letter-spacing: 0; }
+    canvas { width: 100%; display: block; }
+    #liveChart { height: 210px; }
+    #historyChart { height: 240px; }
+
+    .progress-ring { width: 178px; height: 178px; border-radius: 50%; display: grid; place-items: center; margin: 8px auto 14px; background: conic-gradient(var(--blue2) var(--pct, 0deg), rgba(255,255,255,.08) 0deg); position: relative; box-shadow: 0 0 38px rgba(47,128,255,.23); transition: --pct 1300ms cubic-bezier(.22,.9,.22,1); }
+    .progress-ring::before { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: #091523; border: 1px solid rgba(91,182,255,.22); }
+    body.theme-light .progress-ring::before, body.theme-light .angle-ring-large::before { background: #f8fbff; }
+    .progress-ring::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid rgba(91,182,255,.22); border-top-color: rgba(91,182,255,.88); animation: rotate 5.8s linear infinite; }
+    .progress-ring strong { position: relative; font-family: var(--num); font-size: 44px; }
+    .progress-ring span { position: relative; color: var(--muted); font-weight: 800; }
+
+    .imu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .gauge { min-height: 94px; padding: 12px; border-radius: 8px; border: 1px solid rgba(91,182,255,.16); background: rgba(255,255,255,.045); position: relative; overflow: hidden; }
+    .gauge::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 0 38%, rgba(91,182,255,.13) 48%, transparent 58% 100%); transform: translateX(-110%); animation: gaugeSweep 4.4s ease-in-out infinite; pointer-events: none; }
+    .gauge label { display: block; color: var(--muted); font-size: 12px; }
+    .gauge strong { display: block; margin-top: 22px; font-family: var(--num); font-size: 25px; transition: color 220ms ease, text-shadow 220ms ease; }
+    .needle { position: absolute; left: 14px; right: 14px; top: 44px; height: 2px; background: linear-gradient(90deg, transparent, var(--blue2), transparent); transform: rotate(var(--tilt, 0deg)); transform-origin: center; box-shadow: 0 0 16px rgba(91,182,255,.72); transition: transform 1050ms cubic-bezier(.22,.9,.22,1); animation: needlePulse 3s ease-in-out infinite; }
+
+    .score-big { font-family: var(--num); font-size: 86px; line-height: .9; text-align: center; text-shadow: 0 0 34px rgba(57,229,167,.34); }
+    .rating { text-align: center; color: var(--green); font-weight: 850; }
+    .stars { text-align: center; color: var(--yellow); letter-spacing: 4px; margin-top: 8px; animation: twinkle 1.9s ease-in-out infinite; }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 2; }
+    button { min-height: 40px; padding: 0 14px; border: 1px solid rgba(91,182,255,.28); border-radius: 8px; background: rgba(255,255,255,.065); color: #eaf5ff; font: inherit; font-weight: 800; cursor: pointer; transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
+    button:hover { transform: translateY(-2px); border-color: rgba(91,182,255,.6); box-shadow: 0 0 28px rgba(47,128,255,.22); }
+    button.primary { background: linear-gradient(135deg, var(--blue), var(--blue2)); box-shadow: 0 16px 32px rgba(47,128,255,.36); }
+    .theme-toggle { min-width: 42px; padding: 0 11px; }
+
+    .history-layout { display: grid; grid-template-columns: 420px 1fr; gap: 16px; }
+    .record-list { display: grid; gap: 10px; max-height: calc(100vh - 160px); overflow: auto; padding-right: 4px; }
+    .record { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 13px; border-radius: 8px; border: 1px solid rgba(91,182,255,.16); background: rgba(255,255,255,.045); cursor: pointer; }
+    .record.active { border-color: rgba(91,182,255,.66); background: rgba(47,128,255,.15); }
+    .record h3 { margin: 0 0 5px; font-size: 15px; }
+    .record p { margin: 0; color: var(--muted); font-size: 12px; }
+    .record .score { font-family: var(--num); color: var(--blue2); font-size: 30px; font-weight: 900; }
+    .analysis-layout { display: grid; gap: 16px; }
+    .analysis-hero { display: grid; grid-template-columns: 260px 1fr; gap: 22px; align-items: center; padding: 22px; border-radius: 8px; }
+    .recovery-dial { width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto; background: conic-gradient(var(--green) var(--pct, 0deg), rgba(255,255,255,.08) 0deg); position: relative; box-shadow: 0 0 44px rgba(57,229,167,.22); transition: --pct 900ms ease; }
+    .recovery-dial::before { content: ""; position: absolute; inset: 16px; border-radius: 50%; background: #091523; border: 1px solid rgba(91,182,255,.24); }
+    body.theme-light .recovery-dial::before { background: #f8fbff; }
+    .recovery-dial strong { position: relative; font-family: var(--num); font-size: 72px; line-height: .86; text-shadow: 0 0 30px rgba(57,229,167,.36); }
+    .recovery-dial span { position: relative; color: var(--muted); font-weight: 850; }
+    .analysis-summary h2 { margin: 0 0 12px; font-size: 28px; }
+    .analysis-summary p { margin: 8px 0; color: var(--muted); line-height: 1.7; }
+    .analysis-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .analysis-card { padding: 16px; border-radius: 8px; min-height: 246px; }
+    .analysis-card h3 { margin: 0 0 10px; font-size: 16px; }
+    .analysis-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0; }
+    .analysis-stat { padding: 9px; border-radius: 8px; border: 1px solid rgba(91,182,255,.16); background: rgba(255,255,255,.045); }
+    .analysis-stat label { display: block; color: var(--muted); font-size: 11px; }
+    .analysis-stat strong { display: block; margin-top: 4px; font-family: var(--num); font-size: 22px; }
+    .problem-list, .suggestion-list { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+    .problem-list li, .suggestion-list li { padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(91,182,255,.16); background: rgba(255,255,255,.045); color: var(--muted); }
+    .suggestion-list strong { color: var(--text); }
+    .analysis-note { color: var(--muted); font-size: 13px; line-height: 1.7; text-align: center; }
+    .ai-chat-panel { padding: 18px; border-radius: 8px; min-height: 360px; display: grid; grid-template-rows: auto minmax(220px, 1fr) auto; gap: 14px; }
+    .ai-chat-log { display: grid; gap: 10px; align-content: start; max-height: 360px; overflow: auto; padding-right: 4px; }
+    .ai-msg { max-width: 82%; padding: 12px 14px; border-radius: 8px; border: 1px solid rgba(91,182,255,.16); background: rgba(255,255,255,.055); color: var(--muted); line-height: 1.7; white-space: pre-wrap; }
+    .ai-msg.user { justify-self: end; color: #f7fbff; background: linear-gradient(135deg, rgba(47,128,255,.34), rgba(91,182,255,.16)); border-color: rgba(91,182,255,.36); }
+    .ai-msg.assistant { justify-self: start; }
+    .ai-chat-input { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: end; }
+    .ai-chat-input textarea { min-height: 58px; max-height: 120px; resize: vertical; border-radius: 8px; border: 1px solid rgba(91,182,255,.22); background: rgba(255,255,255,.055); color: var(--text); padding: 12px; font: inherit; outline: none; }
+    .ai-chat-input textarea:focus { border-color: rgba(91,182,255,.7); box-shadow: 0 0 24px rgba(47,128,255,.14); }
+    body.theme-light .ai-msg.user { color: #ffffff; }
+    body.theme-light .ai-chat-input textarea { background: rgba(255,255,255,.96); color: #16263E; border-color: #D6E8FF; }
+    body.theme-light .ai-chat-log { padding: 14px; border-radius: 14px; background: rgba(241,247,253,.72); border: 1px solid #dbe8f5; }
+    body.theme-light .ai-msg { color: #34445a; background: #ffffff; border-color: #c9dced; box-shadow: 0 5px 16px rgba(39,77,120,.08); }
+    body.theme-light .ai-msg.user { color: #ffffff; background: linear-gradient(135deg, #2478e8, #3da7ed); border-color: #2478e8; }
+    body.theme-light .ai-msg.assistant { color: #263b55; background: #f8fbff; }
+    body.theme-light .ai-chat-input textarea::placeholder { color: #8191a5; opacity: 1; }
+
+    .health-layout { display: grid; grid-template-columns: minmax(520px, 1.08fr) minmax(420px, .92fr); gap: 16px; align-items: stretch; }
+    .health-hero { min-height: 520px; padding: 22px; position: relative; overflow: hidden; display: grid; align-content: space-between; }
+    .health-hero::after { content: ""; position: absolute; right: -90px; bottom: -120px; width: 360px; height: 360px; border-radius: 50%; border: 1px solid rgba(255,77,109,.18); box-shadow: inset 0 0 90px rgba(255,77,109,.16), 0 0 80px rgba(255,77,109,.10); pointer-events: none; }
+    .heart-orb { width: 260px; height: 260px; border-radius: 50%; margin: 24px auto; display: grid; place-items: center; position: relative; background: radial-gradient(circle at 45% 35%, rgba(255,77,109,.32), rgba(9,21,35,.92) 58%), conic-gradient(from 130deg, rgba(255,77,109,.95), rgba(91,182,255,.18), rgba(255,77,109,.95)); box-shadow: 0 0 46px rgba(255,77,109,.22), inset 0 0 48px rgba(91,182,255,.12); animation: heartPulse 2.4s ease-in-out infinite; }
+    .heart-orb::before { content: ""; position: absolute; inset: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,.10); background: rgba(7,16,29,.74); }
+    body.theme-light .heart-orb::before { background: rgba(248,251,255,.82); }
+    .heart-orb strong { position: relative; font-family: var(--num); font-size: 88px; line-height: .86; text-shadow: 0 0 34px rgba(255,77,109,.55); }
+    .heart-orb span { position: relative; color: var(--red); font-weight: 900; align-self: end; margin-bottom: 58px; }
+    .health-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .health-chart { margin-top: 16px; }
+    #heartChart { height: 260px; }
+    .health-analysis-layout { display: grid; gap: 24px; }
+    .health-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
+    .health-head h2 { margin: 5px 0 0; font-size: 32px; letter-spacing: 0; }
+    .health-head p { margin: 8px 0 0; color: var(--muted); line-height: 1.65; }
+    .health-metric-strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
+    .health-metric-card { min-height: 168px; padding: 20px; border-radius: 22px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(145deg, rgba(16,35,58,.86), rgba(7,20,38,.62)); box-shadow: 0 18px 50px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.10); backdrop-filter: blur(24px); transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease; }
+    .health-metric-card:hover { transform: translateY(-4px); border-color: rgba(88,214,255,.45); box-shadow: 0 24px 70px rgba(0,0,0,.32), 0 0 34px rgba(77,163,255,.16), inset 0 1px 0 rgba(255,255,255,.16); }
+    .health-metric-top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 14px; font-weight: 750; }
+    .health-line-icon { width: 38px; height: 38px; border-radius: 14px; display: grid; place-items: center; border: 1px solid rgba(110,231,255,.20); background: rgba(77,163,255,.11); color: #6ee7ff; }
+    .health-line-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .health-metric-value { margin-top: 24px; font-family: var(--num); font-size: clamp(36px, 3.3vw, 48px); line-height: .92; font-weight: 900; color: #f8fcff; text-shadow: 0 0 24px rgba(88,214,255,.36); }
+    .health-metric-state { margin-top: 12px; font-size: 13px; color: var(--muted); }
+    .health-metric-state.good { color: var(--green); }
+    .health-metric-state.warn { color: var(--yellow); }
+    .health-metric-state.bad { color: var(--red); }
+    .health-tabs { display: inline-flex; gap: 8px; padding: 6px; border-radius: 22px; border: 1px solid rgba(255,255,255,.08); background: rgba(16,35,58,.62); backdrop-filter: blur(20px); }
+    .health-tab { min-height: 42px; padding: 0 18px; border-radius: 16px; color: var(--muted); border: 0; background: transparent; box-shadow: none; }
+    .health-tab.active { color: #f7fbff; background: linear-gradient(135deg, rgba(77,163,255,.92), rgba(88,214,255,.62)); box-shadow: 0 14px 28px rgba(77,163,255,.22); }
+    .health-tab-panel { display: none; animation: rise 250ms ease both; }
+    .health-tab-panel.active { display: block; }
+    .overview-grid { display: grid; grid-template-columns: 340px 1fr; gap: 24px; }
+    .health-score-card, .ai-summary-card, .ai-report-card, .accordion-card, .trend-card, .health-history-card { border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(145deg, rgba(16,35,58,.82), rgba(7,20,38,.58)); box-shadow: 0 18px 58px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08); }
+    .health-score-gauge { width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center; margin: 20px auto; position: relative; background: conic-gradient(#58d6ff var(--pct, 0deg), rgba(255,255,255,.075) 0deg); box-shadow: 0 0 42px rgba(77,163,255,.24); transition: --pct 250ms ease; }
+    .health-score-gauge::before { content: ""; position: absolute; inset: 18px; border-radius: 50%; background: #071426; border: 1px solid rgba(255,255,255,.08); }
+    .health-score-gauge strong { position: relative; font-family: var(--num); font-size: 74px; line-height: .9; }
+    .health-score-gauge span { position: relative; color: #6ee7ff; font-weight: 850; margin-top: 58px; }
+    .ai-summary-card { min-height: 258px; display: grid; align-content: center; }
+    .ai-summary-card h3, .ai-report-card h3, .accordion-card h3, .trend-card h3 { margin: 0 0 14px; font-size: 18px; }
+    .ai-summary-card p { margin: 8px 0; color: rgba(247,251,255,.76); font-size: 16px; line-height: 1.8; }
+    .bento-grid { display: grid; grid-template-columns: 1.3fr .9fr .9fr; grid-auto-rows: 150px; gap: 24px; margin-top: 24px; }
+    .bento-item { border-radius: 24px; padding: 22px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(145deg, rgba(16,35,58,.78), rgba(7,20,38,.52)); overflow: hidden; transition: transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease; }
+    .bento-item:hover { transform: translateY(-3px); border-color: rgba(88,214,255,.38); box-shadow: 0 20px 48px rgba(0,0,0,.26), 0 0 28px rgba(77,163,255,.12); }
+    .bento-item.large { grid-row: span 2; }
+    .bento-item strong { display: block; margin-top: 18px; font-family: var(--num); font-size: 46px; line-height: .9; }
+    .bento-item p { margin: 12px 0 0; color: var(--muted); line-height: 1.55; }
+    .health-report-head { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+    .report-chip { padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.045); }
+    .report-chip label { display: block; color: var(--muted); font-size: 12px; }
+    .report-chip strong { display: block; margin-top: 8px; font-size: 22px; }
+    .timeline { display: grid; gap: 0; }
+    .timeline-item { position: relative; padding: 0 0 22px 34px; color: rgba(247,251,255,.82); line-height: 1.65; }
+    .timeline-item::before { content: ""; position: absolute; left: 10px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: #58d6ff; box-shadow: 0 0 16px rgba(88,214,255,.8); }
+    .timeline-item::after { content: ""; position: absolute; left: 14px; top: 23px; bottom: 0; width: 1px; background: rgba(88,214,255,.22); }
+    .timeline-item:last-child::after { display: none; }
+    .timeline-item.warn::before { background: var(--yellow); box-shadow: 0 0 16px rgba(255,209,102,.65); }
+    .accordion-list { display: grid; gap: 12px; }
+    .accordion-item { border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: rgba(255,255,255,.04); overflow: hidden; }
+    .accordion-button { width: 100%; min-height: 58px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; border: 0; border-radius: 0; background: transparent; box-shadow: none; color: var(--text); }
+    .accordion-button span { color: var(--muted); font-size: 12px; }
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 250ms ease, padding 250ms ease; padding: 0 18px; }
+    .accordion-item.active .accordion-body { max-height: 420px; padding: 0 18px 18px; }
+    .accordion-body p { margin: 8px 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .trend-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .trend-canvas { width: 100%; height: 210px; }
+    .trend-records { display: grid; gap: 10px; margin-top: 18px; }
+    .trend-record { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.045); color: var(--muted); }
+    .health-history-layout { display: grid; gap: 24px; }
+    .health-history-hero { display: grid; grid-template-columns: minmax(280px, .78fr) minmax(0, 1.22fr); gap: 24px; align-items: stretch; }
+    .health-history-score { min-height: 320px; display: grid; align-content: center; text-align: center; position: relative; overflow: hidden; }
+    .health-history-score::after { content: ""; position: absolute; inset: auto -20% -48% -20%; height: 70%; background: radial-gradient(circle, rgba(88,214,255,.18), transparent 62%); pointer-events: none; }
+    .health-history-score strong { display: block; margin-top: 18px; font-family: var(--num); font-size: clamp(72px, 8vw, 118px); line-height: .86; color: #f7fbff; text-shadow: 0 0 46px rgba(88,214,255,.38); }
+    .health-history-score span { color: var(--blue2); font-weight: 900; }
+    .health-history-score p { margin: 16px auto 0; max-width: 320px; color: var(--muted); line-height: 1.7; }
+    .health-history-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .health-history-stat { min-height: 144px; padding: 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.045); position: relative; overflow: hidden; }
+    .health-history-stat::after { content: ""; position: absolute; left: 18px; right: 18px; bottom: 18px; height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--blue), var(--blue2), transparent); box-shadow: 0 0 18px rgba(91,182,255,.48); }
+    .health-history-stat label { display: block; color: var(--muted); font-size: 13px; font-weight: 750; }
+    .health-history-stat strong { display: block; margin-top: 18px; font-family: var(--num); font-size: clamp(34px, 4vw, 54px); line-height: .9; }
+    .health-history-stat span { color: var(--muted); font-size: 12px; }
+    .health-history-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(360px, .65fr); gap: 24px; align-items: stretch; }
+    .health-history-chart { height: 300px; }
+    .health-history-list { display: grid; gap: 12px; max-height: 640px; overflow: auto; padding-right: 4px; }
+    .health-history-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.045); }
+    .health-history-item h3 { margin: 0 0 6px; font-size: 15px; }
+    .health-history-item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .health-history-item strong { font-family: var(--num); font-size: 30px; color: var(--blue2); }
+
+    body.theme-light {
+      color: #16263e;
+      background:
+        radial-gradient(circle at 18% 6%, rgba(47, 128, 255, 0.10), transparent 31%),
+        radial-gradient(circle at 82% 14%, rgba(34, 197, 94, 0.06), transparent 28%),
+        linear-gradient(135deg, #f4f9ff 0%, #eef6ff 48%, #ffffff 100%);
+    }
+    body.theme-light::before { background-image: none; }
+    body.theme-light::after { background: none; animation: none; opacity: 0; }
+    body.theme-light .logo {
+      background: linear-gradient(145deg, #3d9cff, #2f80ff);
+      box-shadow: 0 8px 24px rgba(47,128,255,.16), inset 0 1px 0 rgba(255,255,255,.58);
+    }
+    body.theme-light .brand p,
+    body.theme-light .slogan-en,
+    body.theme-light .sub,
+    body.theme-light .metric-head,
+    body.theme-light .angle-hero .label,
+    body.theme-light .motion-row,
+    body.theme-light .gauge label,
+    body.theme-light .record p,
+    body.theme-light .analysis-summary p,
+    body.theme-light .analysis-stat label,
+    body.theme-light .problem-list li,
+    body.theme-light .suggestion-list li,
+    body.theme-light .analysis-note,
+    body.theme-light .health-head p,
+    body.theme-light .health-metric-top,
+    body.theme-light .health-metric-state,
+    body.theme-light .health-tab,
+    body.theme-light .bento-item p,
+    body.theme-light .report-chip label,
+    body.theme-light .accordion-button span,
+    body.theme-light .accordion-body p,
+    body.theme-light .trend-record,
+    body.theme-light .health-history-score p,
+    body.theme-light .health-history-stat label,
+    body.theme-light .health-history-stat span,
+    body.theme-light .health-history-item p {
+      color: #5b6b82;
+    }
+    body.theme-light .slogan-cn,
+    body.theme-light .brand h1,
+    body.theme-light .home-title,
+    body.theme-light .action-name,
+    body.theme-light .panel-head h2,
+    body.theme-light .panel-head h3,
+    body.theme-light .analysis-summary h2,
+    body.theme-light .analysis-card h3,
+    body.theme-light .health-head h2,
+    body.theme-light .ai-summary-card h3,
+    body.theme-light .ai-report-card h3,
+    body.theme-light .accordion-card h3,
+    body.theme-light .trend-card h3,
+    body.theme-light .health-history-item h3,
+    body.theme-light .suggestion-list strong,
+    body.theme-light .accordion-button {
+      color: #16263e;
+    }
+    body.theme-light .pill {
+      color: #16263e;
+      background: rgba(255,255,255,.94);
+      border-color: #d6e8ff;
+      box-shadow: 0 8px 24px rgba(47,128,255,.08), inset 0 1px 0 rgba(255,255,255,.86);
+    }
+    body.theme-light .glass {
+      border-color: rgba(202,208,220,.62);
+      background: linear-gradient(145deg, rgba(255,255,255,.76), rgba(255,255,255,.56));
+      box-shadow: 0 18px 48px rgba(41,58,84,.09), inset 0 1px 0 rgba(255,255,255,.90);
+    }
+    body.theme-light .card:hover,
+    body.theme-light .health-metric-card:hover,
+    body.theme-light .bento-item:hover {
+      border-color: rgba(47,128,255,.32);
+      box-shadow: 0 14px 32px rgba(47,128,255,.12), inset 0 1px 0 rgba(255,255,255,.98);
+    }
+    body.theme-light .home-hero::before {
+      background-image: radial-gradient(circle,rgba(10,132,255,.24),rgba(90,200,250,.09) 45%,transparent 70%);
+      opacity: .92;
+    }
+    body.theme-light .home-hero::after,
+    body.theme-light .health-hero::after {
+      border-color: rgba(47,128,255,.12);
+      box-shadow: inset 0 0 80px rgba(47,128,255,.08), 0 0 46px rgba(47,128,255,.05);
+    }
+    body.theme-light .hero-ambient span {
+      background: rgba(47,128,255,.14);
+      box-shadow: 0 0 18px rgba(47,128,255,.16);
+    }
+    body.theme-light .icon,
+    body.theme-light .health-line-icon {
+      color: #2f80ff;
+      background: rgba(47,128,255,.08);
+      border-color: #d6e8ff;
+    }
+    body.theme-light .value,
+    body.theme-light .angle-hero strong,
+    body.theme-light .health-metric-value,
+    body.theme-light .health-history-score strong {
+      color: #16263e;
+      text-shadow: 0 8px 22px rgba(47,128,255,.10);
+    }
+    body.theme-light .value.emg-value.relax {
+      color: #24a148;
+      text-shadow: 0 8px 22px rgba(52,199,89,.18);
+    }
+    body.theme-light .value.emg-value.weak {
+      color: #e88400;
+      text-shadow: 0 8px 22px rgba(255,149,0,.18);
+    }
+    body.theme-light .value.emg-value.strong {
+      color: #e3314f;
+      text-shadow: 0 8px 22px rgba(255,55,95,.18);
+    }
+    body.theme-light .value.emg-value.disabled {
+      color: #8e8e93;
+      text-shadow: none;
+    }
+    body.theme-light .kicker,
+    body.theme-light .unit,
+    body.theme-light .angle-hero span,
+    body.theme-light .angle-ring-large span,
+    body.theme-light .record .score,
+    body.theme-light .health-score-gauge span,
+    body.theme-light .health-history-score span,
+    body.theme-light .health-history-item strong {
+      color: #2f80ff;
+    }
+    body.theme-light .angle-ring-large,
+    body.theme-light .progress-ring,
+    body.theme-light .health-score-gauge {
+      background: conic-gradient(#3d9cff var(--pct, 0deg), rgba(214,232,255,.82) 0deg);
+      box-shadow: 0 8px 24px rgba(47,128,255,.10);
+    }
+    body.theme-light .angle-ring-large {
+      background: conic-gradient(#3d9cff var(--angle-pct, 0deg), rgba(214,232,255,.82) 0deg);
+    }
+    body.theme-light .recovery-dial {
+      background: conic-gradient(#22c55e var(--pct, 0deg), rgba(214,232,255,.82) 0deg);
+      box-shadow: 0 8px 24px rgba(34,197,94,.10);
+    }
+    body.theme-light .progress-ring::before,
+    body.theme-light .angle-ring-large::before,
+    body.theme-light .recovery-dial::before,
+    body.theme-light .health-score-gauge::before {
+      background: rgba(255,255,255,.96);
+      border-color: #d6e8ff;
+    }
+    body.theme-light .progress-ring::after,
+    body.theme-light .angle-ring-large::after {
+      border-color: rgba(47,128,255,.14);
+      border-top-color: rgba(47,128,255,.42);
+      border-right-color: rgba(34,197,94,.34);
+    }
+    body.theme-light .motion-track {
+      background: #e6f1ff;
+    }
+    body.theme-light .motion-fill {
+      background: linear-gradient(90deg, #3d9cff, #2f80ff);
+      box-shadow: 0 6px 16px rgba(47,128,255,.16);
+    }
+    body.theme-light .gauge,
+    body.theme-light .record,
+    body.theme-light .analysis-stat,
+    body.theme-light .problem-list li,
+    body.theme-light .suggestion-list li,
+    body.theme-light .report-chip,
+    body.theme-light .accordion-item,
+    body.theme-light .trend-record,
+    body.theme-light .health-history-stat,
+    body.theme-light .health-history-item {
+      border-color: #d6e8ff;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 8px 24px rgba(47,128,255,.06);
+    }
+    body.theme-light .gauge::after {
+      background: linear-gradient(105deg, transparent 0 38%, rgba(47,128,255,.10) 48%, transparent 58% 100%);
+    }
+    body.theme-light .needle {
+      background: linear-gradient(90deg, transparent, #2f80ff, transparent);
+      box-shadow: 0 0 10px rgba(47,128,255,.22);
+    }
+    body.theme-light button {
+      color: #16263e;
+      border-color: #d6e8ff;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 8px 24px rgba(47,128,255,.06);
+    }
+    body.theme-light button:hover {
+      border-color: rgba(47,128,255,.36);
+      box-shadow: 0 12px 28px rgba(47,128,255,.12);
+    }
+    body.theme-light button.primary,
+    body.theme-light .health-tab.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #0a84ff, #5ac8fa);
+      box-shadow: 0 12px 28px rgba(10,132,255,.22);
+    }
+    body.theme-light .record.active {
+      border-color: rgba(47,128,255,.42);
+      background: rgba(47,128,255,.10);
+    }
+    body.theme-light .health-metric-card,
+    body.theme-light .health-score-card,
+    body.theme-light .ai-summary-card,
+    body.theme-light .ai-report-card,
+    body.theme-light .accordion-card,
+    body.theme-light .trend-card,
+    body.theme-light .health-history-card,
+    body.theme-light .bento-item {
+      border-color: #d6e8ff;
+      background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(244,249,255,.94));
+      box-shadow: 0 8px 24px rgba(47,128,255,.08), inset 0 1px 0 rgba(255,255,255,.98);
+    }
+    body.theme-light .health-tabs {
+      border-color: #d6e8ff;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 8px 24px rgba(47,128,255,.08);
+    }
+    body.theme-light .ai-summary-card p,
+    body.theme-light .timeline-item {
+      color: #5b6b82;
+    }
+    body.theme-light .timeline-item::before {
+      background: #2f80ff;
+      box-shadow: 0 0 12px rgba(47,128,255,.22);
+    }
+    body.theme-light .timeline-item::after {
+      background: rgba(47,128,255,.20);
+    }
+    body.theme-light .heart-orb {
+      background:
+        radial-gradient(circle at 45% 35%, rgba(239,68,68,.10), rgba(255,255,255,.96) 58%),
+        conic-gradient(from 130deg, rgba(239,68,68,.72), rgba(47,128,255,.14), rgba(239,68,68,.72));
+      box-shadow: 0 8px 24px rgba(239,68,68,.10), inset 0 0 36px rgba(47,128,255,.06);
+    }
+    body.theme-light .heart-orb::before {
+      background: rgba(255,255,255,.96);
+      border-color: rgba(239,68,68,.14);
+    }
+    body.theme-light .heart-orb strong {
+      color: #16263e;
+      text-shadow: 0 8px 22px rgba(239,68,68,.10);
+    }
+    body.theme-light .score-big,
+    body.theme-light .recovery-dial strong,
+    body.theme-light .health-score-gauge strong,
+    body.theme-light .health-history-stat strong,
+    body.theme-light .analysis-stat strong,
+    body.theme-light .report-chip strong,
+    body.theme-light .bento-item strong,
+    body.theme-light .gauge strong {
+      color: #16263e;
+      text-shadow: none;
+    }
+    body.theme-light .dot.on {
+      background: #22c55e;
+      color: #22c55e;
+    }
+    body.theme-light .dot.live {
+      background: #ef4444;
+      color: #ef4444;
+    }
+    body.theme-light .health-metric-state.good { color: #22c55e; }
+    body.theme-light .health-metric-state.bad { color: #ef4444; }
+    body.theme-light .health-metric-state.warn {
+      color: #f59e0b;
+    }
+
+    @media (max-width: 1180px) { .hud, .home-grid, .realtime-layout, .analysis-hero, .health-layout, .overview-grid, .health-history-hero, .health-history-grid { grid-template-columns: 1fr; } .center-panel, .home-hero, .health-hero { min-height: auto; } .home-hero { gap:80px; } .home-intro { padding-top:90px; } .history-layout { grid-template-columns: 1fr; } .analysis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .health-metric-strip, .health-history-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); } .bento-grid, .trend-grid, .health-report-head { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 720px) { .shell { width: min(100vw - 22px, 1500px); padding-top: 12px; } .topbar { height: auto; align-items: flex-start; flex-direction: column; } .brand { align-items: flex-start; flex-wrap: wrap; } .brand h1 { white-space: normal; font-size: 18px; } .slogan-cn { font-size: 16px; white-space: normal; } .slogan-en { font-size: 12px; white-space: normal; } .home-hero { padding:30px 24px; gap:58px; } .rehab-visual { left:calc(50% - 95px); top:28px; } .home-intro { padding-top:210px; } .home-title { font-size:clamp(36px,11vw,48px); } .home-side { grid-template-rows:auto auto; } .home-quick-grid { grid-template-columns:1fr; height:auto; } .home-quick { min-height:210px; } .home-footnote { grid-template-columns:1fr 1fr; gap:14px; } .home-device { grid-template-columns:38px minmax(0,1fr); } .home-device-meta { grid-column:2; text-align:left; } .metric { min-height: 108px; } .imu-grid, .angle-dashboard, .analysis-grid, .health-metric-strip, .bento-grid, .trend-grid, .health-report-head, .health-history-summary { grid-template-columns: 1fr; } .training-row { align-items: flex-start; flex-direction: column; } .angle-hero { text-align: left; } .angle-ring-large { margin: 0 auto; } .health-head { align-items: flex-start; flex-direction: column; } .health-tabs { width: 100%; overflow-x: auto; } }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes sloganIn { from { opacity: 0; transform: translateX(-18px); } to { opacity: .88; transform: translateX(0); } }
+    @keyframes logoGlow { 0%,100% { box-shadow: 0 0 24px rgba(47,128,255,.50), inset 0 1px 0 rgba(255,255,255,.35); } 50% { box-shadow: 0 0 34px rgba(110,231,255,.62), inset 0 1px 0 rgba(255,255,255,.42); } }
+    @keyframes aiSweep { 0%, 62%, 100% { background-position: 0 0; } 78% { background-position: 100% 0; } }
+    @keyframes particleFlow { from { background-position: 0 0, 34px 52px, 0 0; } to { background-position: 86px 86px, 166px 184px, 0 0; } }
+    @keyframes floatGlow { 0%,100% { opacity: .18; transform: translate3d(0,0,0) scale(.92); } 50% { opacity: .52; transform: translate3d(18px,-22px,0) scale(1.12); } }
+    @keyframes breathe { 0%,100% { box-shadow: 0 0 6px currentColor; transform: scale(.9); } 50% { box-shadow: 0 0 20px currentColor; transform: scale(1.22); } }
+    @keyframes wink { 50% { opacity: .55; } }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes scan { from { transform: translateX(-80%); } to { transform: translateX(80%); } }
+    @keyframes twinkle { 50% { filter: drop-shadow(0 0 12px rgba(255,209,102,.8)); } }
+    @keyframes gaugeSweep { 0%, 45% { transform: translateX(-110%); opacity: 0; } 65% { opacity: .9; } 100% { transform: translateX(110%); opacity: 0; } }
+    @keyframes needlePulse { 50% { filter: drop-shadow(0 0 10px rgba(91,182,255,.85)); } }
+    @keyframes heartPulse { 50% { transform: scale(1.025); box-shadow: 0 0 64px rgba(255,77,109,.34), inset 0 0 58px rgba(91,182,255,.16); } }
+    @keyframes lightAurora {
+      0% { transform:translate3d(-2%,-1%,0) scale(1.02) rotate(-1deg); background-position:0% 10%,100% 0%,80% 100%,10% 86%; }
+      50% { transform:translate3d(2%,1.5%,0) scale(1.08) rotate(1deg); background-position:8% 18%,92% 12%,68% 90%,20% 76%; }
+      100% { transform:translate3d(-1%,3%,0) scale(1.04) rotate(-.5deg); background-position:14% 4%,86% 20%,78% 82%,6% 94%; }
+    }
+    @keyframes lightRibbon {
+      from { transform:translate3d(-8%,-3%,0) rotate(-3deg) scale(1.06); }
+      to { transform:translate3d(8%,4%,0) rotate(3deg) scale(1.13); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body.theme-light::before, body.theme-light::after { animation:none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div class="brand-slogan" aria-label="AI赋能设计，设计点亮AI！AI for Design and Design for AI">
+          <div class="slogan-cn"><span class="ai-word">AI</span>赋能设计，设计点亮<span class="ai-word">AI</span>！</div>
+          <div class="slogan-en"><span class="ai-word">AI</span> for Design &amp; Design for <span class="ai-word">AI</span>!</div>
+        </div>
+        <div><h1>上肢康复训练实时监控终端</h1><p>Medical HUD · Upper Limb Rehabilitation System</p></div>
+      </div>
+      <div class="top-status">
+        <span class="pill"><i id="btDot" class="dot"></i><span id="btText">WiFi未连接</span></span>
+        <span class="pill"><i id="liveDot" class="dot live"></i><span id="trainText">训练待机</span></span>
+        <span class="pill"><strong id="topBattery">上臂 -- · 手腕 --</strong></span>
+        <span class="pill" id="clockText">--:--:--</span>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换昼夜模式">夜</button>
+      </div>
+    </header>
+
+    <section id="homePage" class="page active">
+      <div class="home-grid">
+        <section class="glass home-hero">
+          <div class="rehab-visual" aria-hidden="true"><div class="rehab-ring"></div><div class="rehab-arm"><span></span><i></i><span></span></div><div class="rehab-caption">MOTION / RANGE</div></div>
+          <div class="home-intro">
+            <p class="kicker">DAILY REHABILITATION · 01</p>
+            <h2 class="home-title"><span class="line">让每一次抬手</span><span class="line">都看得见进步</span></h2>
+            <p class="home-copy">连接上臂与手腕设备，在清晰、平静的反馈中完成今日训练。动作幅度、完成质量与身体状态，将被同步记录。</p>
+            <div class="actions home-actions">
+              <button class="primary" onclick="startTraining()">开始训练</button>
+              <button onclick="showPage('history')">查看训练记录</button>
+              <button onclick="showPage('analysis')">康复分析</button>
+            </div>
+          </div>
+          <div class="home-footnote">
+            <div><strong>实时反馈</strong>动作角度与完成度同步</div>
+            <div><strong>双端采集</strong>上臂、手腕协同监测</div>
+            <div><strong>训练留档</strong>自动生成阶段记录</div>
+            <div><strong>AI 建议</strong>智能分析训练并给出建议</div>
+          </div>
+        </section>
+        <aside class="home-side">
+          <section class="glass home-overview">
+            <div class="home-overview-head"><div><p class="kicker">DEVICE OVERVIEW</p><h3>设备状态</h3></div><span class="pill"><i class="dot"></i>双端设备</span></div>
+            <div class="home-device-list">
+              <div class="home-device"><span class="icon">⌁</span><div><div class="home-device-name">上臂端</div><div class="home-device-value" id="upperStatus">未连接</div></div><div class="home-device-meta" id="upperMeta">电量 -- · 未息屏</div></div>
+              <div class="home-device"><span class="icon">◌</span><div><div class="home-device-name">手腕端</div><div class="home-device-value" id="wristStatus">未连接</div></div><div class="home-device-meta" id="wristMeta">电量 -- · 未息屏</div></div>
+            </div>
+          </section>
+          <div class="home-quick-grid">
+            <section class="glass card home-quick" onclick="showPage('health')"><div class="metric-head"><span>健康监测</span><span class="icon">♡</span></div><div><div class="value"><span id="homeHeartRate">--</span><span class="unit">bpm</span></div><div class="sub" id="homeHealthMeta">血氧 -- · 血压 --/--</div></div><span class="home-quick-link">查看健康详情 →</span></section>
+            <section class="glass card home-quick"><div class="metric-head"><span>数据接收</span><span class="icon">↗</span></div><div><div class="value"><span id="homeCount">0</span><span class="unit">帧</span></div><div class="sub">实时数据流</div></div><span class="home-quick-link">等待设备数据</span></section>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="healthPage" class="page">
+      <div class="health-layout">
+        <section class="glass card health-hero">
+          <div class="training-row">
+            <div>
+              <p class="kicker">健康监测 · 实时</p>
+              <div class="action-name">心率实时监控</div>
+            </div>
+            <span class="pill" id="healthLivePill"><i class="dot live"></i><span>等待数据</span></span>
+          </div>
+          <div class="heart-orb"><strong id="healthHeroRate">--</strong><span>bpm</span></div>
+          <div>
+            <div class="sub" id="healthStatusText">手腕端进入心率界面后，将自动显示健康模块数据。</div>
+            <div class="actions" style="margin-top:18px;"><button onclick="showPage('home')">返回主页</button><button onclick="showPage('healthHistory')">历史记录</button><button onclick="showPage('healthAnalysis')">心率分析</button></div>
+          </div>
+        </section>
+        <aside class="stack">
+          <div class="health-grid">
+            <div class="glass card metric"><div class="metric-head"><span>心率</span><span class="icon">♡</span></div><div class="value"><span id="healthRate">--</span><span class="unit">bpm</span></div><div class="sub">MKS 健康模块</div></div>
+            <div class="glass card metric"><div class="metric-head"><span>血氧</span><span class="icon">O₂</span></div><div class="value"><span id="healthSpo2">--</span><span class="unit">%</span></div><div class="sub">SpO₂</div></div>
+            <div class="glass card metric"><div class="metric-head"><span>血压</span><span class="icon">BP</span></div><div class="value"><span id="healthBp">--/--</span><span class="unit">mmHg</span></div><div class="sub">收缩压 / 舒张压</div></div>
+            <div class="glass card metric"><div class="metric-head"><span>疲劳指数</span><span class="icon">F</span></div><div class="value"><span id="healthFatigue">--</span><span class="unit">%</span></div><div class="sub">仅用于训练辅助</div></div>
+          </div>
+          <div class="glass card imu-panel">
+            <div class="panel-head"><h2>HRV 与微循环</h2><span class="pill">HEALTH</span></div>
+            <div class="imu-grid">
+              <div class="gauge"><label>SDNN</label><i class="needle"></i><strong id="healthSdnn">--</strong></div>
+              <div class="gauge"><label>RMSSD</label><i class="needle"></i><strong id="healthRmssd">--</strong></div>
+              <div class="gauge"><label>微循环</label><i class="needle"></i><strong id="healthMicro">--</strong></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <section class="glass chart-panel health-chart">
+        <div class="panel-head"><h2>心率曲线</h2><span class="pill">实时</span></div>
+        <canvas id="heartChart"></canvas>
+      </section>
+    </section>
+
+    <section id="healthAnalysisPage" class="page">
+      <div class="health-analysis-layout">
+        <div class="health-head">
+          <div>
+            <p class="kicker">AI HEALTH REPORT</p>
+            <h2>健康监测分析</h2>
+            <p>根据手腕端健康模块数据，生成面向康复训练的实时健康概览与训练辅助建议。</p>
+          </div>
+          <button onclick="showPage('health')">返回检测</button>
+        </div>
+        <section class="health-metric-strip" id="healthMetricStrip"></section>
+        <nav class="health-tabs" id="healthTabs">
+          <button class="health-tab active" onclick="setHealthTab('overview')">健康概览</button>
+          <button class="health-tab" onclick="setHealthTab('ai')">AI分析</button>
+          <button class="health-tab" onclick="setHealthTab('detail')">指标详情</button>
+          <button class="health-tab" onclick="setHealthTab('trend')">历史趋势</button>
+        </nav>
+
+        <section class="health-tab-panel active" id="healthTabOverview">
+          <div class="overview-grid">
+            <article class="health-score-card">
+              <div class="panel-head"><h3>综合健康评分</h3><span class="pill" id="healthScoreState">--</span></div>
+              <div class="health-score-gauge" id="healthScoreDial"><strong id="healthScore">0</strong><span>分</span></div>
+              <p class="sub" id="healthScoreSummary">等待健康模块数据。</p>
+            </article>
+            <article class="ai-summary-card">
+              <div class="panel-head"><h3>AI 今日总结</h3><span class="pill">实时规则</span></div>
+              <div id="healthAISummaryLines"></div>
+            </article>
+          </div>
+          <div class="bento-grid" id="healthBentoGrid"></div>
+        </section>
+
+        <section class="health-tab-panel" id="healthTabAi">
+          <article class="ai-report-card">
+            <div class="panel-head"><h3>AI健康助手</h3><span class="pill">Health Report</span></div>
+            <div class="health-report-head" id="healthReportHead"></div>
+            <div class="timeline" id="healthTimeline"></div>
+          </article>
+        </section>
+
+        <section class="health-tab-panel" id="healthTabDetail">
+          <article class="accordion-card">
+            <div class="panel-head"><h3>指标详情</h3><span class="pill">Accordion</span></div>
+            <div class="accordion-list" id="healthAccordion"></div>
+          </article>
+        </section>
+
+        <section class="health-tab-panel" id="healthTabTrend">
+          <div class="trend-grid">
+            <article class="trend-card"><div class="panel-head"><h3>心率折线图</h3><span class="pill">HR</span></div><canvas class="trend-canvas" id="trendHeartChart"></canvas></article>
+            <article class="trend-card"><div class="panel-head"><h3>血氧折线图</h3><span class="pill">SpO2</span></div><canvas class="trend-canvas" id="trendSpo2Chart"></canvas></article>
+            <article class="trend-card"><div class="panel-head"><h3>HRV 变化</h3><span class="pill">SDNN</span></div><canvas class="trend-canvas" id="trendHrvChart"></canvas></article>
+            <article class="trend-card"><div class="panel-head"><h3>疲劳指数</h3><span class="pill">Fatigue</span></div><canvas class="trend-canvas" id="trendFatigueChart"></canvas></article>
+          </div>
+          <article class="trend-card" style="margin-top:24px;"><div class="panel-head"><h3>训练记录</h3><span class="pill">Recent</span></div><div class="trend-records" id="healthTrendRecords"></div></article>
+        </section>
+        <p class="analysis-note">小提示：本页面建议仅用于训练辅助和健康状态参考，不替代医生或康复治疗师的专业指导。</p>
+      </div>
+    </section>
+
+    <section id="healthHistoryPage" class="page">
+      <div class="health-history-layout">
+        <div class="health-head">
+          <div>
+            <p class="kicker">健康检测 · 历史记录</p>
+            <h2>健康数据回放</h2>
+            <p>汇总本次运行期间手腕端上传的心率、血氧、HRV、疲劳与微循环数据，用于健康检测过程复盘。</p>
+          </div>
+          <div class="actions">
+            <button onclick="showPage('health')">返回检测</button>
+            <button onclick="showPage('home')">返回主页</button>
+          </div>
+        </div>
+        <section class="health-history-hero">
+          <article class="health-history-card health-history-score">
+            <p class="kicker">综合健康趋势</p>
+            <strong id="healthHistoryScore">0</strong>
+            <span>分</span>
+            <p id="healthHistorySummary">等待健康检测数据。</p>
+          </article>
+          <div class="health-history-summary">
+            <article class="health-history-stat"><label>平均心率</label><strong id="hhAvgHr">--</strong><span>bpm</span></article>
+            <article class="health-history-stat"><label>平均血氧</label><strong id="hhAvgSpo2">--</strong><span>%</span></article>
+            <article class="health-history-stat"><label>平均 HRV</label><strong id="hhAvgHrv">--</strong><span>ms</span></article>
+            <article class="health-history-stat"><label>疲劳均值</label><strong id="hhAvgFatigue">--</strong><span>%</span></article>
+          </div>
+        </section>
+        <section class="health-history-grid">
+          <article class="health-history-card">
+            <div class="panel-head"><h3>心率历史曲线</h3><span class="pill" id="healthHistoryCount">0 条</span></div>
+            <canvas class="health-history-chart" id="healthHistoryHeartChart"></canvas>
+          </article>
+          <article class="health-history-card">
+            <div class="panel-head"><h3>检测记录</h3><span class="pill">Recent</span></div>
+            <div class="health-history-list" id="healthHistoryList"></div>
+          </article>
+        </section>
+        <section class="trend-grid">
+          <article class="health-history-card"><div class="panel-head"><h3>血氧变化</h3><span class="pill">SpO2</span></div><canvas class="trend-canvas" id="healthHistorySpo2Chart"></canvas></article>
+          <article class="health-history-card"><div class="panel-head"><h3>HRV 与疲劳</h3><span class="pill">HRV</span></div><canvas class="trend-canvas" id="healthHistoryHrvChart"></canvas></article>
+        </section>
+      </div>
+    </section>
+
+    <section id="realtimePage" class="page">
+      <div class="hud realtime-layout">
+        <section class="glass center-panel">
+          <div class="training-row"><div><p class="kicker">正式训练 · 实时</p><div class="action-name" id="heroAction">待识别</div></div><div class="angle-hero"><div class="label" id="heroAngleLabel">动作角度</div><strong id="heroAngle">0</strong><span>deg</span></div></div>
+          <div class="angle-dashboard">
+            <div class="angle-ring-large" id="angleRingLarge"><strong id="angleRingValue">0</strong><span>deg</span></div>
+            <div class="motion-bars">
+              <div class="motion-row"><span>肘关节</span><div class="motion-track"><div class="motion-fill" id="barElbow"></div></div><strong id="barElbowValue">0°</strong></div>
+              <div class="motion-row"><span>前臂旋转</span><div class="motion-track"><div class="motion-fill" id="barForearm"></div></div><strong id="barForearmValue">0°</strong></div>
+              <div class="motion-row"><span>肩部上举</span><div class="motion-track"><div class="motion-fill" id="barAbd"></div></div><strong id="barAbdValue">0°</strong></div>
+              <div class="motion-row"><span>上臂外展</span><div class="motion-track"><div class="motion-fill" id="barShoulder"></div></div><strong id="barShoulderValue">0°</strong></div>
+            </div>
+          </div>
+          <div class="actions"><button onclick="showPage('home')">返回主页</button><button class="primary" onclick="stopTraining()">结束训练</button><button onclick="showPage('history')">历史记录</button></div>
+        </section>
+        <aside class="stack">
+          <div class="glass card metric"><div class="metric-head"><span id="angleCardLabel">动作角度</span><span class="icon">∠</span></div><div class="value"><span id="rtAngle">0</span><span class="unit">deg</span></div><div class="sub" id="rtAction">待识别</div></div>
+          <div class="glass card metric"><div class="metric-head"><span>肌电识别</span><span class="icon">EMG</span></div><div class="value emg-value relax" id="rtEmgLabel">放松</div><div class="sub">强度 <span id="rtEmgStrength">0</span></div><div class="emg-track"><div class="emg-fill" id="rtEmgFill"></div></div></div>
+          <div class="glass card metric"><div class="metric-head"><span>完成度</span><span class="icon">◎</span></div><div class="progress-ring" id="progressRing"><strong id="rtCompletion">0</strong><span>%</span></div></div>
+          <div class="glass card score-panel"><div class="panel-head"><h3>训练评分</h3><span class="pill" id="ratingText">Excellent</span></div><div class="score-big" id="rtScore">0</div><div class="stars" id="stars">★★★★★</div></div>
+        </aside>
+      </div>
+      <div class="hud" style="grid-template-columns:1fr 1fr; margin-top:16px;">
+        <section class="glass chart-panel"><div class="panel-head"><h2>实时曲线</h2><span class="pill">实时</span></div><canvas id="liveChart"></canvas></section>
+      </div>
+    </section>
+
+    <section id="resultPage" class="page">
+      <div class="hud" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="glass card metric"><div class="metric-head"><span>综合评分</span><span class="icon">★</span></div><div class="value"><span id="resultScore">0</span><span class="unit">分</span></div></div>
+        <div class="glass card metric"><div class="metric-head"><span>完成次数</span><span class="icon">↻</span></div><div class="value"><span id="resultReps">0/0</span><span class="unit">次</span></div></div>
+        <div class="glass card metric"><div class="metric-head"><span>训练动作</span><span class="icon">⌁</span></div><div class="value" id="resultAction">--</div></div>
+      </div>
+      <div class="actions" style="margin-top:18px;"><button class="primary" onclick="startTraining()">再次训练</button><button onclick="showPage('home')">返回主页</button><button onclick="showPage('history')">历史记录</button></div>
+    </section>
+
+    <section id="historyPage" class="page">
+      <div class="history-layout">
+        <section class="glass history-panel"><div class="panel-head"><h2>训练记录</h2><button onclick="showPage('home')">返回</button></div><div class="record-list" id="recordList"></div></section>
+        <section class="glass history-panel"><div class="panel-head"><h2>7 天评分趋势</h2><span class="pill">AI ANALYSIS</span></div><canvas id="historyChart"></canvas><div class="hud" style="grid-template-columns:repeat(3,1fr); margin-top:14px;"><div class="gauge"><label>训练动作</label><strong id="detailAction">--</strong></div><div class="gauge"><label>完成次数</label><strong id="detailReps">--</strong></div><div class="gauge"><label>最佳角度</label><strong id="detailAngle">--</strong></div></div></section>
+      </div>
+    </section>
+
+    <section id="analysisPage" class="page">
+      <div class="analysis-layout">
+        <section class="glass analysis-hero">
+          <div class="recovery-dial" id="recoveryDial"><strong id="recoveryIndex">0</strong><span>恢复指数</span></div>
+          <div class="analysis-summary">
+            <div class="panel-head"><h2>AI康复分析 / 智能训练建议</h2><button onclick="showPage('home')">返回主页</button></div>
+            <p id="analysisRange">正在读取训练记录...</p>
+            <p>最薄弱动作：<strong id="weakAction">--</strong></p>
+            <p>主要问题：<strong id="mainProblem">--</strong></p>
+            <p>生成时间：<span id="analysisGeneratedAt">--</span></p>
+          </div>
+        </section>
+        <section class="analysis-grid" id="actionAnalysisGrid"></section>
+        <section class="hud" style="grid-template-columns:1fr 1fr;">
+          <div class="glass history-panel">
+            <div class="panel-head"><h2>本周发现的问题</h2><span class="pill">规则分析</span></div>
+            <ul class="problem-list" id="problemList"></ul>
+          </div>
+          <div class="glass history-panel">
+            <div class="panel-head"><h2>推荐训练动作</h2><span class="pill">训练建议</span></div>
+            <ul class="suggestion-list" id="suggestionList"></ul>
+          </div>
+        </section>
+        <section class="glass ai-chat-panel">
+          <div class="panel-head">
+            <h2>AI模型对话</h2>
+            <span class="pill" id="aiModelName">qwen3.7-plus</span>
+          </div>
+          <div class="ai-chat-log" id="aiChatLog"></div>
+          <div class="ai-chat-input">
+            <textarea id="aiChatInput" placeholder="例如：根据最近训练记录，帮我安排明天的训练建议"></textarea>
+            <button onclick="askAiWithAnalysis()">生成训练建议</button>
+            <button class="primary" onclick="sendAiChat()">发送</button>
+          </div>
+        </section>
+        <p class="analysis-note">小提示：本页面建议仅用于训练辅助，不替代医生或康复治疗师的专业指导。</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script>
+    const state = {
+      page: 'home',
+      points: [],
+      healthPoints: [],
+      healthTrend: [],
+      history: [],
+      analysis: null,
+      aiChatMessages: [],
+      aiChatBusy: false,
+      lastHealth: {},
+      healthTab: 'overview',
+      healthAccordion: 'heart_rate',
+      healthCharts: {},
+      pollTimer: null,
+      lastCount: null,
+      lastHealthSeq: null,
+      wristHealthActiveSeen: false,
+      healthSuppressUntil: 0,
+      healthTargetRate: 0,
+      healthSmoothRate: 0,
+      healthReady: false,
+      manualNavUntil: 0,
+      lastSampleAt: 0,
+      lastAngle: 0,
+      prevAngle: 0,
+      angleVelocity: 0,
+      smoothChartAngle: 0,
+      targetAngle: 0,
+      smoothDisplayAngle: 0,
+      displayAngleReady: false,
+      animationStarted: false,
+      themeMode: localStorage.getItem('rehabTheme') || 'auto',
+    };
+    const healthIndicators = [
+      {
+        key: 'heart_rate', name: '心率', unit: '次/min', normal: '60-100', support: '本地/云端支持',
+        definition: '安静状态下每分钟心跳次数，可因年龄、性别或生理因素产生个体差异。',
+        rules: [
+          { test: h => h.heart_rate > 0 && h.heart_rate < 60, level: '心动过缓', reason: '常见于运动员或家族遗传，也可能与心脏供血不足、微循环异常或起搏功能异常有关。', advice: '建议实时监测心率变化，如出现头晕、乏力、晕厥等症状请及时就诊。' },
+          { test: h => h.heart_rate > 100, level: '心动过速', reason: '可能与运动、饮酒、吸烟、情绪激动、发热、贫血或缺氧等因素有关。', advice: '请在静息状态下测量，戒烟戒酒，保持有氧运动和规律作息。' },
+          { test: h => h.heart_rate >= 60 && h.heart_rate <= 100, level: '正常', reason: '', advice: '继续保持健康生活。' },
+        ],
+        value: h => h.heart_rate || 0,
+      },
+      {
+        key: 'spo2', name: '血氧饱和度', unit: '%', normal: '95-99', support: '本地/云端支持',
+        definition: '血液中氧合血红蛋白容量占全部可结合血红蛋白容量的百分比，是呼吸循环的重要参数。',
+        rules: [
+          { test: h => h.spo2 > 0 && h.spo2 < 95, level: '血氧偏低', reason: '呼吸系统或心血管系统可能存在异常，长时间低氧会影响神经系统及身体器官。', advice: '建议增加有氧运动，戒烟戒酒，保持富含维生素和铁的健康饮食。' },
+          { test: h => h.spo2 >= 95 && h.spo2 <= 99, level: '正常', reason: '', advice: '继续保持健康生活。' },
+        ],
+        value: h => h.spo2 || 0,
+      },
+      {
+        key: 'micro_circ', name: '微循环', unit: '%', normal: '>79', support: '本地/云端支持',
+        definition: '微循环反映血管弹性状态，血管弹性下降会影响心血管系统功能。',
+        rules: [
+          { test: h => h.micro_circ > 0 && h.micro_circ < 70, level: '血管指数过低', reason: '可能处于亚健康状态，容易诱发局部微循环障碍。', advice: '建议少熬夜、低盐低脂饮食、戒烟戒酒，并增加有氧运动。' },
+          { test: h => h.micro_circ >= 70 && h.micro_circ <= 79, level: '血管指数较低', reason: '常见于疲劳、虚弱、脂肪摄入过量或缺乏运动。', advice: '建议低盐低脂饮食，避免过劳，增加慢跑、太极等有氧运动。' },
+          { test: h => h.micro_circ > 79, level: '正常', reason: '', advice: '继续保持健康生活。' },
+        ],
+        value: h => h.micro_circ || 0,
+      },
+      {
+        key: 'bp', name: '血压', unit: 'mmHg', normal: '90-140/60-90', support: '本地/云端支持',
+        definition: '收缩压为心室收缩时动脉血压最高值，舒张压为心室舒张末期动脉血压最低值。',
+        rules: [
+          { test: h => h.sbp > 0 && h.dbp > 0 && (h.sbp < 90 || h.dbp < 60), level: '血压较低', reason: '生理性低血压可无明显症状，病理性低血压可能出现头晕乏力。', advice: '建议避免过劳，注意补充营养，增加有氧运动。' },
+          { test: h => h.sbp > 140 || h.dbp > 90, level: '血压较高', reason: '可能与精神紧张、高钠低钾饮食或大量饮酒等因素有关。', advice: '建议调节饮食、补钾排钠、增加粗粮摄入，并定期测量血压。' },
+          { test: h => h.sbp >= 90 && h.sbp <= 140 && h.dbp >= 60 && h.dbp <= 90, level: '正常', reason: '', advice: '继续保持健康生活。' },
+        ],
+        value: h => (h.sbp && h.dbp) ? `${h.sbp}/${h.dbp}` : 0,
+      },
+      {
+        key: 'hrv', name: '心率变异性 HRV', unit: 'ms', normal: '22-120', support: '本地/云端支持',
+        definition: 'HRV 表示逐次心跳周期差异变化，可反映自主神经对心血管系统的调节情况。',
+        rules: [
+          { test: h => h.sdnn > 0 && h.sdnn < 22, level: 'HRV 偏低', reason: '可能提示心脏自主神经调节能力较弱，长期偏低会增加心血管风险。', advice: '建议少熬夜、避免过劳和精神压力，增加有氧运动。' },
+          { test: h => h.sdnn > 120, level: 'HRV 偏高', reason: '可能与心律失常或测量操作不当有关。', advice: '建议注意正确测量方法，保持规律作息，必要时进一步检查。' },
+          { test: h => h.sdnn >= 22 && h.sdnn <= 120, level: '正常', reason: '', advice: '继续保持健康生活。' },
+        ],
+        value: h => h.sdnn || h.rmssd || 0,
+      },
+      {
+        key: 'fatigue', name: '疲劳状态', unit: '', normal: '>25', support: '本地/云端支持',
+        definition: '疲劳是主观疲乏无力的不适感觉，可能影响正常活动或工作能力。',
+        rules: [
+          { test: h => h.fatigue > 0 && h.fatigue < 15, level: '过度疲劳', reason: '可能与任务重、运动过量、睡眠不足或心理压力有关。', advice: '建议保证睡眠，补充营养，注意劳逸结合，适当有氧运动。' },
+          { test: h => h.fatigue >= 15 && h.fatigue <= 25, level: '轻度疲劳', reason: '可能表现为注意力不集中、精神焦虑或紧张。', advice: '建议保证睡眠，调节心情，疏解压力。' },
+          { test: h => h.fatigue > 25, level: '正常', reason: '', advice: '继续保持健康生活。' },
+        ],
+        value: h => Number.isFinite(Number(h.fatigue)) ? h.fatigue : 0,
+      },
+      { key: 'arrhythmia', name: '心律失常', unit: '有/无', normal: '无', support: '本地不支持 / 云端支持', definition: '心律失常是心脏活动起源或传导异常导致的频率或节律异常。', rules: [], value: () => 0, fallback: '当前模块本地未输出该指标。' },
+      { key: 'respiration', name: '呼吸频率', unit: '次/分钟', normal: '12-20', support: '本地不支持 / 云端支持', definition: '呼吸频率是每分钟呼吸次数，成人正常范围一般为 12-20 次/分钟。', rules: [], value: () => 0, fallback: '当前模块本地未输出该指标。' },
+      { key: 'scatter', name: '心率散点图', unit: '', normal: '图形分析', support: '本地不支持 / 云端支持', definition: '心率散点图将长时间心率数据转换成高密度图形，用于动态心率分析。', rules: [], value: () => 0, fallback: '当前 Web 暂未接入长时程散点图数据。' },
+    ];
+    let systemState = { is_training: false };
+    const ids = id => document.getElementById(id);
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, Number(v) || 0));
+    const setText = (id, value) => { const el = ids(id); if (el) el.textContent = value; };
+
+    function showPage(page, source = 'manual') {
+      if (source === 'manual') state.manualNavUntil = Date.now() + 5000;
+      state.page = page;
+      document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+      ids(page + 'Page').classList.add('active');
+      if (page === 'history') loadHistory();
+      if (page === 'analysis') loadAnalysis();
+      if (page === 'healthAnalysis') renderHealthAnalysis();
+      if (page === 'healthHistory') loadHealthHistory();
+      setTimeout(() => { drawLiveChart(); drawHeartChart(); drawHistoryChart(); renderHealthTrendCharts(); renderHealthHistory(); }, 60);
+    }
+
+    async function startTraining() { await fetch('/api/start', { method: 'POST' }); systemState.is_training = true; showPage('realtime'); updateTopStatus(); }
+    async function stopTraining() { await fetch('/api/stop', { method: 'POST' }); systemState.is_training = false; showPage('result'); updateTopStatus(); }
+
+    function preferredTheme() {
+      if (state.themeMode === 'light' || state.themeMode === 'dark') return state.themeMode;
+      const hour = new Date().getHours();
+      return hour >= 7 && hour < 19 ? 'light' : 'dark';
+    }
+
+    function applyTheme() {
+      const theme = preferredTheme();
+      document.body.classList.toggle('theme-light', theme === 'light');
+      setText('themeToggle', theme === 'light' ? '日' : '夜');
+    }
+    function isLightTheme() {
+      return document.body.classList.contains('theme-light');
+    }
+
+    function toggleTheme() {
+      const current = preferredTheme();
+      state.themeMode = current === 'light' ? 'dark' : 'light';
+      localStorage.setItem('rehabTheme', state.themeMode);
+      applyTheme();
+      drawLiveChart();
+      drawHeartChart();
+      drawHistoryChart();
+      renderHealthTrendCharts();
+      renderHealthHistory();
+    }
+
+    function isFreshRealtime(obj) {
+      if (!obj || !obj.time) return false;
+      const stamp = Date.parse(String(obj.time).replace(' ', 'T'));
+      return Number.isFinite(stamp) && Math.abs(Date.now() - stamp) < 6000;
+    }
+
+    function updateClock() { ids('clockText').textContent = new Date().toLocaleTimeString('zh-CN', { hour12: false }); }
+    setInterval(updateClock, 1000); updateClock();
+
+    function updateTopStatus(data = {}) {
+      const rt = data.realtime || {};
+      const devices = data.devices || {};
+      const upper = devices.upper || {};
+      const wrist = devices.wrist || {};
+      const hasUploaded = Number(data.count || 0) > 0 && isFreshRealtime(data);
+      // This badge represents the upper-arm WiFi/MQTT uplink. A fresh packet is
+      // the end-to-end proof; the Bluetooth fields describe the wrist link only.
+      const wifiOn = hasUploaded;
+      const upperBattery = upper.battery_valid ? `${upper.battery}%` : (Number.isFinite(Number(rt.battery)) && rt.battery > 0 ? `${rt.battery}%` : '--');
+      const wristBattery = wrist.battery_valid ? `${wrist.battery}%` : '--';
+      ids('btDot').className = 'dot' + (wifiOn ? ' on' : '');
+      setText('btText', wifiOn ? 'WiFi已连接' : 'WiFi未连接');
+      setText('trainText', systemState.is_training ? '训练中 · 实时' : '训练待机');
+      if (!systemState.is_training && state.page === 'health') setText('trainText', '健康监测 · 实时');
+      setText('topBattery', `上臂 ${upperBattery} · 手腕 ${wristBattery}`);
+    }
+
+    function isFreshHealth(health) {
+      if (!health || !health.valid) return false;
+      if (Number.isFinite(Number(health.age_ms))) return Number(health.age_ms) < 6500;
+      if (!health.updated_at) return true;
+      const stamp = Date.parse(String(health.updated_at).replace(' ', 'T'));
+      return !Number.isFinite(stamp) || Math.abs(Date.now() - stamp) < 6500;
+    }
+
+    function renderHealth(health = {}) {
+      state.lastHealth = health || {};
+      const fresh = isFreshHealth(health);
+      const rate = Number(health.heart_rate || 0);
+      const hasRate = fresh && rate > 0;
+      setText('healthHeroRate', hasRate ? rate : '--');
+      setText('healthRate', hasRate ? rate : '--');
+      setText('healthSpo2', fresh && health.spo2 ? health.spo2 : '--');
+      setText('healthBp', fresh && health.sbp && health.dbp ? `${health.sbp}/${health.dbp}` : '--/--');
+      setText('healthFatigue', fresh && Number.isFinite(Number(health.fatigue)) ? health.fatigue : '--');
+      setText('healthSdnn', fresh && Number.isFinite(Number(health.sdnn)) ? `${health.sdnn} ms` : '--');
+      setText('healthRmssd', fresh && Number.isFinite(Number(health.rmssd)) ? `${health.rmssd} ms` : '--');
+      setText('healthMicro', fresh && Number.isFinite(Number(health.micro_circ)) ? health.micro_circ : '--');
+      setText('healthStatusText', fresh ? '健康数据已更新' : '等待手腕端心率界面上传健康数据。');
+      const pill = ids('healthLivePill');
+      if (pill) pill.innerHTML = fresh ? '<i class="dot live"></i><span>实时监测</span>' : '<i class="dot"></i><span>等待数据</span>';
+      if (hasRate) {
+        state.healthTargetRate = rate;
+        if (!state.healthReady) {
+          state.healthSmoothRate = rate;
+          state.healthReady = true;
+        }
+        const seq = health.seq ?? `${health.updated_at || ''}-${rate}`;
+        if (seq !== state.lastHealthSeq) {
+          state.lastHealthSeq = seq;
+          const label = health.updated_at ? String(health.updated_at).split(' ').pop() : new Date().toLocaleTimeString('zh-CN', { hour12: false });
+          state.healthPoints.push({ label, rate });
+          state.healthTrend.push({
+            label,
+            heart_rate: Number(health.heart_rate || 0),
+            spo2: Number(health.spo2 || 0),
+            hrv: Number(health.sdnn || health.rmssd || 0),
+            fatigue: Number(health.fatigue || 0),
+            micro: Number(health.micro_circ || 0),
+          });
+          if (state.healthPoints.length > 72) state.healthPoints.shift();
+          if (state.healthTrend.length > 72) state.healthTrend.shift();
+        }
+      }
+      drawHeartChart();
+      if (state.page === 'healthAnalysis') renderHealthAnalysis();
+      if (state.page === 'healthHistory') renderHealthHistory();
+      return hasRate;
+    }
+
+    function evaluateHealthIndicator(indicator, health) {
+      const value = indicator.value(health || {});
+      if (!value || value === '0/0') {
+        return { value: '--', level: '暂无数据', reason: indicator.fallback || '等待健康模块上传该指标。', advice: '请保持手腕端在心率检测界面并等待数据稳定。' };
+      }
+      const matched = (indicator.rules || []).find(rule => rule.test(health || {}));
+      if (!matched) {
+        return { value, level: '待观察', reason: indicator.fallback || '当前数值暂未命中规则范围。', advice: '建议重新测量或结合连续数据观察。' };
+      }
+      return { value, level: matched.level, reason: matched.reason || indicator.definition, advice: matched.advice };
+    }
+
+    function healthStatusClass(level) {
+      if (level === '正常') return 'good';
+      if (level === '暂无数据') return '';
+      return level.includes('低') || level.includes('高') || level.includes('疲劳') || level.includes('过速') || level.includes('过缓') ? 'warn' : '';
+    }
+
+    function healthValueText(item, result) {
+      return `${result.value}${result.value === '--' ? '' : item.unit}`;
+    }
+
+    function healthScore(evalItems) {
+      const valid = evalItems.filter(x => x.result.level !== '暂无数据');
+      if (!valid.length) return 0;
+      const normal = valid.filter(x => x.result.level === '正常').length;
+      const watch = valid.filter(x => x.result.level === '待观察').length;
+      return Math.round(((normal + watch * 0.5) / valid.length) * 100);
+    }
+
+    function setHealthTab(tab) {
+      state.healthTab = tab;
+      document.querySelectorAll('.health-tab').forEach(btn => btn.classList.remove('active'));
+      const buttons = Array.from(document.querySelectorAll('.health-tab'));
+      const order = ['overview', 'ai', 'detail', 'trend'];
+      const index = order.indexOf(tab);
+      if (buttons[index]) buttons[index].classList.add('active');
+      document.querySelectorAll('.health-tab-panel').forEach(panel => panel.classList.remove('active'));
+      const panel = ids('healthTab' + tab[0].toUpperCase() + tab.slice(1));
+      if (panel) panel.classList.add('active');
+      renderHealthAnalysis();
+    }
+
+    function setHealthAccordion(key) {
+      state.healthAccordion = key;
+      renderHealthAnalysis();
+    }
+
+    function lineIcon(name) {
+      const icons = {
+        heart_rate: '<svg viewBox="0 0 24 24"><path d="M20.8 4.6c-1.7-1.7-4.4-1.5-5.9.4L12 8.4 9.1 5C7.6 3.1 4.9 2.9 3.2 4.6c-1.8 1.8-1.7 4.7.2 6.5L12 19l8.6-7.9c1.9-1.8 2-4.7.2-6.5Z"/></svg>',
+        spo2: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg>',
+        micro_circ: '<svg viewBox="0 0 24 24"><path d="M4 14c4-8 8 8 16 0"/><path d="M4 18c4-8 8 8 16 0"/></svg>',
+        bp: '<svg viewBox="0 0 24 24"><path d="M6 13a6 6 0 1 1 12 0"/><path d="M12 13l4-4"/><path d="M8 18h8"/></svg>',
+        hrv: '<svg viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>',
+        fatigue: '<svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M3 12h4M17 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>',
+      };
+      return icons[name] || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+    }
+
+    function renderHealthAnalysis() {
+      const health = state.lastHealth || {};
+      const mainItems = healthIndicators.slice(0, 6).map(item => ({ item, result: evaluateHealthIndicator(item, health) }));
+      const score = healthScore(mainItems);
+      const scoreState = score >= 85 ? '身体状态良好' : score >= 65 ? '建议适度关注' : (score > 0 ? '建议降低训练强度' : '等待检测数据');
+      setText('healthScore', score);
+      setText('healthScoreState', scoreState);
+      setText('healthScoreSummary', scoreState);
+      const dial = ids('healthScoreDial');
+      if (dial) dial.style.setProperty('--pct', score * 3.6 + 'deg');
+
+      const strip = ids('healthMetricStrip');
+      if (strip) {
+        strip.innerHTML = mainItems.map(({ item, result }) => `
+          <article class="health-metric-card">
+            <div class="health-metric-top"><span>${item.name}</span><span class="health-line-icon">${lineIcon(item.key)}</span></div>
+            <div class="health-metric-value">${healthValueText(item, result)}</div>
+            <div class="health-metric-state ${healthStatusClass(result.level)}">${result.level}</div>
+          </article>
+        `).join('');
+      }
+
+      const abnormal = mainItems.filter(x => x.result.level !== '正常' && x.result.level !== '暂无数据');
+      const summaryLines = abnormal.length
+        ? ['今日检测结果存在需要关注的指标。', ...abnormal.slice(0, 3).map(x => `${x.item.name}：${x.result.level}，${x.result.advice}`)]
+        : ['今日检测结果总体正常。', '心率、血氧及血压处于稳定范围。', '建议保持轻中等强度康复训练并注意补水。'];
+      const summaryBox = ids('healthAISummaryLines');
+      if (summaryBox) summaryBox.innerHTML = summaryLines.map(text => `<p>${text}</p>`).join('');
+
+      const bento = ids('healthBentoGrid');
+      if (bento) {
+        const keys = ['heart_rate', 'spo2', 'hrv', 'fatigue'];
+        bento.innerHTML = keys.map((key, index) => {
+          const item = healthIndicators.find(x => x.key === key);
+          const result = evaluateHealthIndicator(item, health);
+          return `<article class="bento-item ${index === 0 ? 'large' : ''}">
+            <div class="health-metric-top"><span>${item.name}</span><span class="health-line-icon">${lineIcon(item.key)}</span></div>
+            <strong>${healthValueText(item, result)}</strong>
+            <p>${result.level} · ${result.advice}</p>
+          </article>`;
+        }).join('');
+      }
+
+      const report = ids('healthReportHead');
+      if (report) {
+        report.innerHTML = [
+          ['综合评分', `${score} 分`],
+          ['风险等级', score >= 85 ? '低风险' : score >= 65 ? '中等关注' : '需关注'],
+          ['恢复能力', score >= 80 ? '良好' : '一般'],
+          ['训练建议', score >= 80 ? '20-30 分钟' : '10-20 分钟'],
+        ].map(([label, value]) => `<div class="report-chip"><label>${label}</label><strong>${value}</strong></div>`).join('');
+      }
+      const timeline = ids('healthTimeline');
+      if (timeline) {
+        const statusLines = mainItems.slice(0, 4).map(x => ({ text: `${x.item.name}${x.result.level}`, warn: x.result.level !== '正常' }));
+        const tips = abnormal.length
+          ? ['今天训练 20 分钟即可', '注意补水并避免剧烈训练', '建议 23 点前睡觉']
+          : ['维持当前康复训练节奏', '训练后补水并做放松拉伸', '保持规律睡眠'];
+        timeline.innerHTML = [...statusLines, { text: '建议', warn: false }, ...tips.map(text => ({ text, warn: false }))]
+          .map(item => `<div class="timeline-item ${item.warn ? 'warn' : ''}">${item.text}</div>`).join('');
+      }
+
+      const accordion = ids('healthAccordion');
+      if (accordion) {
+        accordion.innerHTML = healthIndicators.map(item => {
+          const result = evaluateHealthIndicator(item, health);
+          const active = state.healthAccordion === item.key;
+          return `<article class="accordion-item ${active ? 'active' : ''}">
+            <button class="accordion-button" onclick="setHealthAccordion('${item.key}')"><strong>${active ? '▼' : '▶'} ${item.name}</strong><span>${result.level}</span></button>
+            <div class="accordion-body">
+              <p><strong>正常范围：</strong>${item.normal}</p>
+              <p><strong>当前值：</strong>${healthValueText(item, result)}</p>
+              <p><strong>状态判断：</strong>${result.level}</p>
+              <p><strong>指标解释：</strong>${item.definition}</p>
+              <p><strong>可能原因：</strong>${result.reason || '无明显异常原因。'}</p>
+              <p><strong>训练建议：</strong>${result.advice}</p>
+            </div>
+          </article>`;
+        }).join('');
+      }
+
+      renderHealthTrendCharts();
+    }
+
+    function renderDeviceStatus(obj) {
+      const upper = (obj.devices || {}).upper || {};
+      const wrist = (obj.devices || {}).wrist || {};
+      const hasUploaded = Number(obj.count || 0) > 0 && isFreshRealtime(obj);
+      setText('upperStatus', hasUploaded && upper.bluetooth_connected ? '已连接' : '未连接');
+      setText('wristStatus', hasUploaded && wrist.bluetooth_connected ? '已连接' : '未连接');
+      setText('upperMeta', `电量 ${upper.battery_valid ? upper.battery + '%' : '--'} · ${upper.sleeping ? '息屏中' : '未息屏'}`);
+      setText('wristMeta', `电量 ${wrist.battery_valid ? wrist.battery + '%' : '--'} · ${wrist.sleeping ? '息屏中' : '未息屏'}`);
+      const health = obj.health || {};
+      setText('homeHeartRate', health.valid && health.heart_rate ? health.heart_rate : '--');
+      setText('homeHealthMeta', `血氧 ${health.valid && health.spo2 ? health.spo2 + '%' : '--'} · 血压 ${health.valid && health.sbp ? health.sbp : '--'}/${health.valid && health.dbp ? health.dbp : '--'}`);
+    }
+
+    function renderResult(rt) {
+      setText('resultScore', rt.score ?? 0);
+      setText('resultReps', `${rt.reps ?? 0}/${rt.target_reps ?? 0}`);
+      setText('resultAction', rt.action || '--');
+    }
+
+    function setMotionBar(id, value) {
+      const angle = clamp(value, 0, 180);
+      const fill = ids('bar' + id);
+      const text = ids('bar' + id + 'Value');
+      if (fill) fill.style.setProperty('--v', (angle / 180 * 100).toFixed(1) + '%');
+      if (text) text.textContent = Math.round(angle) + '°';
+    }
+
+    function updateMotion(rt, parsed = {}) {
+      const angle = clamp(rt.display_angle ?? rt.elbow_angle, 0, 180);
+      state.targetAngle = angle;
+      if (!state.displayAngleReady) {
+        state.smoothDisplayAngle = angle;
+        state.displayAngleReady = true;
+      }
+      setText('heroAngleLabel', rt.angle_name || '动作角度');
+      setText('angleCardLabel', rt.angle_name || '动作角度');
+      setMotionBar('Elbow', rt.elbow_angle ?? (rt.action_index === 0 ? angle : 0));
+      setMotionBar('Forearm', rt.forearm_angle ?? (rt.action_index === 2 ? angle : 0));
+      setMotionBar('Abd', rt.arm_abd_angle ?? (rt.action_index === 3 ? angle : 0));
+      setMotionBar('Shoulder', rt.shoulder_angle ?? (rt.action_index === 1 ? angle : 0));
+    }
+
+    function rating(score) {
+      if (score >= 90) return 'Excellent';
+      if (score >= 75) return 'Good';
+      if (score >= 60) return 'Stable';
+      return 'Training';
+    }
+
+    function applyRealtime(obj) {
+      systemState = obj.system_state || systemState;
+      const rt = obj.realtime || {};
+      const wristDevice = (obj.devices || {}).wrist || {};
+      const angle = clamp(rt.display_angle ?? rt.elbow_angle, 0, 180);
+      const now = performance.now();
+      const hadSample = state.lastSampleAt > 0;
+      const previousSampleAt = state.lastSampleAt || now;
+      const sampleGap = Math.max(80, now - previousSampleAt);
+      const countChanged = state.lastCount === null || obj.count !== state.lastCount;
+      state.prevAngle = state.lastAngle;
+      state.lastAngle = angle;
+      state.lastSampleAt = now;
+      state.lastCount = obj.count;
+      if (!hadSample) {
+        state.angleVelocity = 0;
+        state.smoothChartAngle = angle;
+        state.smoothDisplayAngle = angle;
+        state.targetAngle = angle;
+        state.displayAngleReady = true;
+      } else if (countChanged) {
+        const rawVelocity = (state.lastAngle - state.prevAngle) / sampleGap;
+        const delta = Math.abs(state.lastAngle - state.prevAngle);
+        const damping = clamp(1 - delta / 140, 0.24, 0.86);
+        state.angleVelocity = clamp(rawVelocity * damping, -0.045, 0.045);
+      }
+      updateTopStatus(obj); renderDeviceStatus(obj); renderResult(rt); updateMotion(rt, obj.parsed || {});
+      const healthFresh = renderHealth(obj.health || {});
+      setText('homeCount', obj.count ?? 0);
+      setText('rtAction', rt.action || '待识别');
+      setText('heroAction', rt.action || '待识别');
+      const emgEnabled = rt.emg_enabled !== false;
+      const emgStrength = emgEnabled ? clamp(rt.emg_strength ?? 0, 0, 100) : 0;
+      const emgMode = emgEnabled ? clamp(rt.emg_mode ?? 0, 0, 2) : 0;
+      const emgLabel = emgEnabled ? (rt.emg_label || ['放松', '较弱', '用力'][emgMode] || '放松') : '未启用';
+      const emgClass = emgEnabled ? (emgMode === 2 ? 'strong' : (emgMode === 1 ? 'weak' : 'relax')) : 'disabled';
+      setText('rtEmgLabel', emgLabel);
+      setText('rtEmgStrength', emgStrength);
+      ids('rtEmgLabel').className = 'value emg-value ' + emgClass;
+      ids('rtEmgFill').className = 'emg-fill ' + emgClass;
+      ids('rtEmgFill').style.setProperty('--emg', emgStrength + '%');
+      setText('rtCompletion', rt.completion ?? 0);
+      setText('rtScore', rt.score ?? 0);
+      setText('ratingText', rating(rt.score || 0));
+      ids('progressRing').style.setProperty('--pct', clamp(rt.completion, 0, 100) * 3.6 + 'deg');
+      const label = obj.time ? obj.time.split(' ').pop() : new Date().toLocaleTimeString('zh-CN', { hour12: false });
+      state.points.push({ label, angle, score: rt.score || 0, emg: rt.emg || 0 });
+      if (state.points.length > 72) state.points.shift();
+      drawLiveChart();
+      const pageName = String(obj.parsed?.page || obj.system_state?.last_page || '').toLowerCase();
+      const trainingPage = pageName === 'training' || pageName === 'realtime' || pageName === 'train';
+      const wristHealthActive = !!wristDevice.health_active;
+      const wristHealthEnter = !!wristDevice.health_enter;
+      const wristHealthExit = !!wristDevice.health_exit;
+      const healthRequest = !!wristDevice.health_request;
+      const upperPageEvent = Number(obj.parsed?.uevt || 0);
+      const manualLocked = Date.now() < state.manualNavUntil;
+      const healthAutoSuppressed = Date.now() < state.healthSuppressUntil;
+      if (wristHealthActive || healthFresh) state.wristHealthActiveSeen = true;
+      if ((state.page === 'health') && wristHealthExit && isFreshRealtime(obj)) {
+        state.wristHealthActiveSeen = false;
+        state.healthSuppressUntil = Date.now() + 3000;
+        showPage('home', 'mcu');
+      }
+      if (!manualLocked && (trainingPage || obj.system_state?.is_training) && isFreshRealtime(obj) && (state.page === 'home' || state.page === 'result')) showPage('realtime', 'mcu');
+      if (!manualLocked && upperPageEvent === 1 && !wristHealthActive && !wristHealthEnter && !healthRequest) showPage('result', 'mcu');
+      if (!manualLocked && upperPageEvent === 2 && !wristHealthActive && !wristHealthEnter && !healthRequest) showPage('home', 'mcu');
+      if (!manualLocked && !healthAutoSuppressed && !wristHealthExit && (wristHealthEnter || healthRequest || wristHealthActive || healthFresh) && !obj.system_state?.is_training && (state.page === 'home' || state.page === 'result')) showPage('health', 'mcu');
+      if (!manualLocked && (state.page === 'health') && !wristHealthExit && (state.wristHealthActiveSeen && !wristHealthActive && !healthFresh) && isFreshRealtime(obj)) {
+        state.wristHealthActiveSeen = false;
+        showPage('home', 'mcu');
+      }
+      if (!manualLocked && !healthFresh && !healthRequest && !wristHealthActive && !wristHealthEnter && !wristHealthExit && (pageName === 'result' || pageName === 'free_result')) showPage('result', 'mcu');
+      else if (!manualLocked && !healthFresh && !healthRequest && !wristHealthActive && !wristHealthEnter && !wristHealthExit && pageName === 'home' && isFreshRealtime(obj) && state.page !== 'home') showPage('home', 'mcu');
+    }
+
+    function drawCurve(canvas, series, opts = {}) {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+      const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+      const w = rect.width, h = rect.height, pad = 22;
+      ctx.clearRect(0, 0, w, h);
+      const light = isLightTheme();
+      ctx.strokeStyle = light ? 'rgba(122,140,165,.24)' : 'rgba(157,176,201,.12)'; ctx.lineWidth = 1;
+      for (let i = 1; i < 5; i++) { const y = pad + (h - pad * 2) * i / 5; ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(w - pad, y); ctx.stroke(); }
+      if (!series.length) return;
+      const max = opts.max || Math.max(100, ...series.map(p => p.v));
+      const pts = series.map((p, i) => ({ x: pad + (w - pad * 2) * (series.length === 1 ? 1 : i / (series.length - 1)), y: h - pad - clamp(p.v, 0, max) / max * (h - pad * 2) }));
+      const grad = ctx.createLinearGradient(0, pad, 0, h - pad); grad.addColorStop(0, light ? 'rgba(47,128,255,.18)' : 'rgba(91,182,255,.38)'); grad.addColorStop(1, 'rgba(47,128,255,0)');
+      ctx.beginPath(); ctx.moveTo(pts[0].x, h - pad); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.lineTo(p.x, p.y)); ctx.lineTo(pts[pts.length-1].x, h - pad); ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+      ctx.beginPath(); pts.forEach((p, i) => { if (!i) ctx.moveTo(p.x, p.y); else { const prev = pts[i-1]; const cx = (prev.x + p.x) / 2; ctx.bezierCurveTo(cx, prev.y, cx, p.y, p.x, p.y); } });
+      ctx.strokeStyle = opts.color || '#5bb6ff'; ctx.lineWidth = 3; ctx.shadowColor = opts.color || '#5bb6ff'; ctx.shadowBlur = 16; ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    function predictedAngle() {
+      if (!state.lastSampleAt) return state.lastAngle || 0;
+      const dt = Math.min(1400, performance.now() - state.lastSampleAt);
+      const predicted = clamp(state.lastAngle + state.angleVelocity * dt * 0.45, state.lastAngle - 9, state.lastAngle + 9);
+      const diff = Math.abs(predicted - state.smoothChartAngle);
+      const alpha = clamp(0.13 - diff / 420, 0.032, 0.12);
+      state.smoothChartAngle += (predicted - state.smoothChartAngle) * alpha;
+      return clamp(state.smoothChartAngle, 0, 180);
+    }
+
+    function updateSmoothAngleDisplay() {
+      if (!state.displayAngleReady) return;
+      const diff = Math.abs(state.targetAngle - state.smoothDisplayAngle);
+      const alpha = clamp(0.20 - diff / 360, 0.035, 0.18);
+      state.smoothDisplayAngle += (state.targetAngle - state.smoothDisplayAngle) * alpha;
+      const display = clamp(state.smoothDisplayAngle, 0, 180);
+      const rounded = Math.round(display);
+      setText('heroAngle', rounded);
+      setText('angleRingValue', rounded);
+      setText('rtAngle', rounded);
+      const ring = ids('angleRingLarge');
+      if (ring) ring.style.setProperty('--angle-pct', (display / 180 * 360).toFixed(1) + 'deg');
+    }
+
+    function drawLiveChart() {
+      const data = state.points.map(p => ({ v: p.angle }));
+      if (data.length) data[data.length - 1] = { v: predictedAngle() };
+      drawCurve(ids('liveChart'), data, { max: 180, color: '#5bb6ff' });
+    }
+    function updateSmoothHeartRate() {
+      if (!state.healthReady) return;
+      const diff = Math.abs(state.healthTargetRate - state.healthSmoothRate);
+      const alpha = clamp(0.16 - diff / 240, 0.035, 0.14);
+      state.healthSmoothRate += (state.healthTargetRate - state.healthSmoothRate) * alpha;
+    }
+    function drawHeartChart() {
+      const data = state.healthPoints.map(p => ({ v: p.rate }));
+      if (data.length && state.healthReady) data[data.length - 1] = { v: state.healthSmoothRate };
+      drawCurve(ids('heartChart'), data, { max: 180, color: '#ff4d6d' });
+    }
+    function drawTrendCanvas(canvas, key, max, color = '#58d6ff') {
+      const data = state.healthTrend.map(p => ({ v: p[key] || 0 }));
+      drawCurve(canvas, data, { max, color });
+    }
+    function renderTrendEchart(canvas, key, max, color) {
+      if (!window.echarts || !canvas) return false;
+      try {
+        const light = isLightTheme();
+        const chart = state.healthCharts[key] || echarts.init(canvas, null, { renderer: 'canvas' });
+        state.healthCharts[key] = chart;
+        chart.setOption({
+          backgroundColor: 'transparent',
+          grid: { left: 28, right: 18, top: 20, bottom: 26 },
+          xAxis: {
+            type: 'category',
+            data: state.healthTrend.map(p => p.label),
+            axisLine: { lineStyle: { color: light ? 'rgba(122,140,165,.24)' : 'rgba(255,255,255,.10)' } },
+            axisTick: { show: false },
+            axisLabel: { color: light ? '#7a8ca5' : 'rgba(247,251,255,.45)', fontSize: 10 },
+          },
+          yAxis: {
+            type: 'value',
+            min: 0,
+            max,
+            splitLine: { lineStyle: { color: light ? 'rgba(122,140,165,.18)' : 'rgba(255,255,255,.08)' } },
+            axisLabel: { color: light ? '#7a8ca5' : 'rgba(247,251,255,.45)', fontSize: 10 },
+          },
+          series: [{
+            type: 'line',
+            smooth: true,
+            symbol: 'none',
+            data: state.healthTrend.map(p => p[key] || 0),
+            lineStyle: { width: 3, color, shadowBlur: 14, shadowColor: color },
+            areaStyle: {
+              color: {
+                type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [{ offset: 0, color: color + '55' }, { offset: 1, color: color + '00' }],
+              },
+            },
+          }],
+          animationDuration: 250,
+        }, true);
+        chart.resize();
+        return true;
+      } catch (err) {
+        console.warn('ECharts fallback to canvas', err);
+        return false;
+      }
+    }
+    function renderHealthTrendCharts() {
+      if (!renderTrendEchart(ids('trendHeartChart'), 'heart_rate', 180, '#58d6ff')) drawTrendCanvas(ids('trendHeartChart'), 'heart_rate', 180, '#58d6ff');
+      if (!renderTrendEchart(ids('trendSpo2Chart'), 'spo2', 100, '#6ee7ff')) drawTrendCanvas(ids('trendSpo2Chart'), 'spo2', 100, '#6ee7ff');
+      if (!renderTrendEchart(ids('trendHrvChart'), 'hrv', 160, '#39e5a7')) drawTrendCanvas(ids('trendHrvChart'), 'hrv', 160, '#39e5a7');
+      if (!renderTrendEchart(ids('trendFatigueChart'), 'fatigue', 100, '#ffd166')) drawTrendCanvas(ids('trendFatigueChart'), 'fatigue', 100, '#ffd166');
+      const records = ids('healthTrendRecords');
+      if (records) {
+        const recent = state.healthTrend.slice(-5).reverse();
+        records.innerHTML = recent.length ? recent.map(item => `
+          <div class="trend-record"><span>${item.label}</span><strong>心率 ${item.heart_rate || '--'} · 血氧 ${item.spo2 || '--'} · HRV ${item.hrv || '--'} · 疲劳 ${item.fatigue || '--'}</strong></div>
+        `).join('') : '<div class="trend-record"><span>暂无记录</span><strong>等待健康数据</strong></div>';
+      }
+    }
+    function avgHealth(key) {
+      const values = state.healthTrend.map(item => Number(item[key] || 0)).filter(v => v > 0);
+      if (!values.length) return 0;
+      return values.reduce((sum, value) => sum + value, 0) / values.length;
+    }
+    function healthHistoryScore() {
+      const hr = avgHealth('heart_rate');
+      const spo2 = avgHealth('spo2');
+      const hrv = avgHealth('hrv');
+      const fatigue = avgHealth('fatigue');
+      let score = 100;
+      if (hr && (hr < 60 || hr > 100)) score -= Math.min(20, Math.abs(hr - 80) * 0.6);
+      if (spo2 && spo2 < 95) score -= Math.min(25, (95 - spo2) * 8);
+      if (hrv && hrv < 22) score -= Math.min(18, (22 - hrv) * 0.7);
+      if (fatigue && fatigue < 25) score -= Math.min(20, (25 - fatigue) * 0.8);
+      return Math.round(clamp(score, 0, 100));
+    }
+    function renderHealthHistory() {
+      if (state.page !== 'healthHistory') return;
+      const count = state.healthTrend.length;
+      const score = count ? healthHistoryScore() : 0;
+      const avgHr = avgHealth('heart_rate');
+      const avgSpo2 = avgHealth('spo2');
+      const avgHrv = avgHealth('hrv');
+      const avgFatigue = avgHealth('fatigue');
+      setText('healthHistoryScore', score);
+      setText('healthHistoryCount', `${count} 条`);
+      setText('healthHistorySummary', count ? (score >= 85 ? '整体状态稳定，适合进行低到中等强度康复训练。' : score >= 70 ? '部分指标有波动，训练时建议降低强度并观察反应。' : '健康指标波动较明显，建议以轻量训练和休息恢复为主。') : '等待健康检测数据。');
+      setText('hhAvgHr', avgHr ? Math.round(avgHr) : '--');
+      setText('hhAvgSpo2', avgSpo2 ? avgSpo2.toFixed(1) : '--');
+      setText('hhAvgHrv', avgHrv ? Math.round(avgHrv) : '--');
+      setText('hhAvgFatigue', avgFatigue ? Math.round(avgFatigue) : '--');
+      drawCurve(ids('healthHistoryHeartChart'), state.healthTrend.map(p => ({ v: p.heart_rate || 0 })), { max: 180, color: '#ff4d6d' });
+      drawCurve(ids('healthHistorySpo2Chart'), state.healthTrend.map(p => ({ v: p.spo2 || 0 })), { max: 100, color: '#6ee7ff' });
+      drawCurve(ids('healthHistoryHrvChart'), state.healthTrend.map(p => ({ v: p.hrv || 0 })), { max: 160, color: '#39e5a7' });
+      const list = ids('healthHistoryList');
+      if (list) {
+        const recent = state.healthTrend.slice(-18).reverse();
+        list.innerHTML = recent.length ? recent.map(item => `
+          <div class="health-history-item">
+            <div>
+              <h3>${item.label}</h3>
+              <p>血氧 ${item.spo2 || '--'}% · HRV ${item.hrv || '--'}ms · 疲劳 ${item.fatigue || '--'}% · 微循环 ${item.micro || '--'}</p>
+            </div>
+            <strong>${item.heart_rate || '--'}</strong>
+          </div>
+        `).join('') : '<div class="health-history-item"><div><h3>暂无记录</h3><p>进入健康检测界面后，手腕端上传的数据会显示在这里。</p></div><strong>--</strong></div>';
+      }
+    }
+    function drawHistoryChart() { drawCurve(ids('historyChart'), state.history.slice().reverse().map(p => ({ v: p.score })), { max: 100, color: '#39e5a7' }); }
+
+    async function pollLatest() { try { applyRealtime(await (await fetch('/api/latest', { cache: 'no-store' })).json()); } catch (err) { console.warn(err); } }
+    async function loadAnalysis() {
+      try {
+        const obj = await (await fetch('/api/analysis', { cache: 'no-store' })).json();
+        state.analysis = obj;
+        renderAnalysis(obj);
+      } catch (err) {
+        console.warn(err);
+        setText('analysisRange', '分析数据读取失败，请稍后重试。');
+      }
+    }
+    async function loadHistory() {
+      const obj = await (await fetch('/api/history', { cache: 'no-store' })).json();
+      state.history = obj.records || []; renderHistory(); drawHistoryChart();
+    }
+    async function loadHealthHistory() {
+      try {
+        const obj = await (await fetch('/api/health_history', { cache: 'no-store' })).json();
+        const records = Array.isArray(obj.records) ? obj.records : [];
+        state.healthTrend = records.map(item => ({
+          label: item.label || (item.updated_at ? String(item.updated_at).split(' ').pop() : '--'),
+          updated_at: item.updated_at || '',
+          heart_rate: Number(item.heart_rate || 0),
+          spo2: Number(item.spo2 || 0),
+          hrv: Number(item.hrv || item.sdnn || item.rmssd || 0),
+          fatigue: Number(item.fatigue || 0),
+          micro: Number(item.micro || item.micro_circ || 0),
+          seq: Number(item.seq || 0),
+        }));
+        state.healthPoints = state.healthTrend.map(item => ({ label: item.label, rate: item.heart_rate })).filter(item => item.rate > 0);
+        const last = state.healthTrend[state.healthTrend.length - 1];
+        if (last && last.seq) state.lastHealthSeq = last.seq;
+        renderHealthHistory();
+        renderHealthTrendCharts();
+        drawHeartChart();
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+    function renderHistory() {
+      ids('recordList').innerHTML = state.history.map((r, i) => `<div class="record ${i === 0 ? 'active' : ''}" data-i="${i}"><div><h3>${r.action}</h3><p>${r.date} · ${r.duration}</p></div><div class="score">${r.score}</div></div>`).join('');
+      document.querySelectorAll('.record').forEach(el => el.onclick = () => selectRecord(state.history[Number(el.dataset.i)], el));
+      if (state.history[0]) selectRecord(state.history[0], document.querySelector('.record'), false);
+    }
+    function selectRecord(record, el, mark = true) {
+      if (!record) return;
+      if (mark) { document.querySelectorAll('.record').forEach(x => x.classList.remove('active')); el.classList.add('active'); }
+      setText('detailAction', record.action); setText('detailReps', record.reps + ' 次'); setText('detailAngle', record.best_angle + '°');
+    }
+
+    function stars(n) {
+      const value = Math.round(clamp(n, 1, 5));
+      return '★★★★★'.slice(0, value) + '☆☆☆☆☆'.slice(0, 5 - value);
+    }
+
+    function renderAnalysis(data) {
+      if (!data) return;
+      const recovery = clamp(data.recovery_index, 0, 100);
+      setText('recoveryIndex', Math.round(recovery));
+      ids('recoveryDial').style.setProperty('--pct', recovery * 3.6 + 'deg');
+      setText('analysisRange', `${data.range || '最近训练记录'} · 共 ${data.record_count || 0} 条`);
+      setText('weakAction', data.weak_action || '--');
+      setText('mainProblem', data.main_problem || '--');
+      setText('analysisGeneratedAt', data.generated_at || '--');
+
+      const actions = data.action_analysis || [];
+      ids('actionAnalysisGrid').innerHTML = actions.map(item => `
+        <article class="glass card analysis-card">
+          <div class="panel-head"><h3>${item.action}</h3><span class="pill">${item.trend}</span></div>
+          <div class="stars">${stars(item.stars || 1)}</div>
+          <div class="analysis-stats">
+            <div class="analysis-stat"><label>平均评分</label><strong>${item.avg_score}</strong></div>
+            <div class="analysis-stat"><label>完成度</label><strong>${item.avg_completion}%</strong></div>
+            <div class="analysis-stat"><label>幅度</label><strong>${item.avg_amplitude}%</strong></div>
+            <div class="analysis-stat"><label>平均角度</label><strong>${item.avg_angle}°</strong></div>
+          </div>
+          <p class="sub">${item.advice}</p>
+        </article>
+      `).join('');
+
+      const problems = [];
+      actions.forEach(item => {
+        (item.problems || []).forEach(problem => {
+          if (problem !== '训练表现稳定') problems.push(`${item.action}：${problem}`);
+        });
+      });
+      if (!problems.length) problems.push('训练表现稳定，建议保持规律训练节奏。');
+      ids('problemList').innerHTML = problems.map(text => `<li>${text}</li>`).join('');
+
+      const suggestions = data.suggestions || [];
+      ids('suggestionList').innerHTML = suggestions.map(group => `
+        <li><strong>${group.action}训练建议：</strong>${group.reason ? `针对${group.reason}，` : ''}${(group.items || []).join('、')}</li>
+      `).join('') || '<li>训练建议：保持当前训练计划，注意动作稳定和休息间隔。</li>';
+      renderAiChat();
+    }
+
+    function renderAiChat() {
+      const log = ids('aiChatLog');
+      if (!log) return;
+      const messages = state.aiChatMessages.length ? state.aiChatMessages : [{
+        role: 'assistant',
+        content: '我可以结合当前训练记录、恢复指数、薄弱动作和实时数据，生成更具体的训练建议。'
+      }];
+      log.innerHTML = messages.map(msg => `
+        <div class="ai-msg ${msg.role === 'user' ? 'user' : 'assistant'}">${escapeHtml(msg.content || '')}</div>
+      `).join('');
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    async function sendAiChat(message) {
+      if (state.aiChatBusy) return;
+      const input = ids('aiChatInput');
+      const text = (message || input?.value || '').trim();
+      if (!text) return;
+      if (input) input.value = '';
+      state.aiChatMessages.push({ role: 'user', content: text });
+      state.aiChatMessages.push({ role: 'assistant', content: '正在调用模型生成建议...' });
+      state.aiChatBusy = true;
+      renderAiChat();
+      try {
+        const resp = await fetch('/api/ai_chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, messages: state.aiChatMessages.filter(m => m.content !== '正在调用模型生成建议...') })
+        });
+        const obj = await resp.json();
+        state.aiChatMessages.pop();
+        if (!resp.ok || !obj.ok) throw new Error(obj.error || '模型调用失败');
+        state.aiChatMessages.push({ role: 'assistant', content: obj.answer || '模型未返回内容。' });
+        setText('aiModelName', obj.model || 'qwen3.7-plus');
+      } catch (err) {
+        state.aiChatMessages.pop();
+        state.aiChatMessages.push({ role: 'assistant', content: `模型调用失败：${err.message || err}` });
+      } finally {
+        state.aiChatBusy = false;
+        renderAiChat();
+      }
+    }
+
+    function askAiWithAnalysis() {
+      const data = state.analysis || {};
+      const prompt = `请基于当前训练AI分析结果，给出下一次康复训练建议。恢复指数：${data.recovery_index || '--'}，最薄弱动作：${data.weak_action || '--'}，主要问题：${data.main_problem || '--'}。请包含训练动作、组数、节奏、注意事项。`;
+      sendAiChat(prompt);
+    }
+
+    function connectRealtimeStream() {
+      if (!window.EventSource) { state.pollTimer = setInterval(pollLatest, 400); return; }
+      const events = new EventSource('/events');
+      events.addEventListener('realtime_data', event => { try { applyRealtime(JSON.parse(event.data)); } catch (err) { console.warn(err); } });
+      events.onerror = () => { events.close(); if (!state.pollTimer) state.pollTimer = setInterval(pollLatest, 400); };
+    }
+
+    function animateLiveChart() {
+      updateSmoothAngleDisplay();
+      updateSmoothHeartRate();
+      if (state.page === 'realtime') drawLiveChart();
+      if (state.page === 'health') drawHeartChart();
+      requestAnimationFrame(animateLiveChart);
+    }
+
+    window.addEventListener('resize', () => { drawLiveChart(); drawHeartChart(); drawHistoryChart(); renderHealthTrendCharts(); renderHealthHistory(); });
+    applyTheme();
+    setInterval(() => { if (state.themeMode === 'auto') applyTheme(); }, 60000);
+    loadHealthHistory();
+    pollLatest(); connectRealtimeStream();
+    requestAnimationFrame(animateLiveChart);
+  </script>
+</body>
+</html>

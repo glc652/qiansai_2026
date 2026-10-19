@@ -1,0 +1,49 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "STM32U575",
+      "compilerPath": "C:/msys64/ucrt64/bin/gcc.exe",
+      "intelliSenseMode": "windows-gcc-arm",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "defines": [
+        "USE_HAL_DRIVER",
+        "STM32U575xx",
+        "LV_CONF_INCLUDE_SIMPLE",
+        "LV_LVGL_H_INCLUDE_SIMPLE"
+      ],
+      "includePath": [
+        "${workspaceFolder}/Core/Inc",
+        "${workspaceFolder}/Core/Utils",
+        "${workspaceFolder}/Drivers/STM32U5xx_HAL_Driver/Inc",
+        "${workspaceFolder}/Drivers/STM32U5xx_HAL_Driver/Inc/Legacy",
+        "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32U5xx/Include",
+        "${workspaceFolder}/Drivers/CMSIS/Include",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+        "${workspaceFolder}/Middlewares/Third_Party/CMSIS/RTOS2/Include",
+        "${workspaceFolder}/Middlewares/Third_Party/lvgl",
+        "${workspaceFolder}/Middlewares/Third_Party/lvgl/src"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/Core/Inc",
+          "${workspaceFolder}/Core/Utils",
+          "${workspaceFolder}/Drivers/STM32U5xx_HAL_Driver/Inc",
+          "${workspaceFolder}/Drivers/STM32U5xx_HAL_Driver/Inc/Legacy",
+          "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32U5xx/Include",
+          "${workspaceFolder}/Drivers/CMSIS/Include",
+          "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
+          "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure",
+          "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+          "${workspaceFolder}/Middlewares/Third_Party/CMSIS/RTOS2/Include",
+          "${workspaceFolder}/Middlewares/Third_Party/lvgl",
+          "${workspaceFolder}/Middlewares/Third_Party/lvgl/src"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ]
+}

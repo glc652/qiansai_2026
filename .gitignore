@@ -1,0 +1,13 @@
+# Local configuration and caches
+.env
+.env.*
+!.env.example
+!.env.sample
+__pycache__/
+*.py[cod]
+
+ # Android local build files
+.gradle/
+/app/BAND_APK2.0/app/build/
+/app/BAND_APK2.0/build/
+local.properties

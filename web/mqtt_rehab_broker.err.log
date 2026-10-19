@@ -1,0 +1,458 @@
+[2026-08-11 22:05:15,772] :: WARNING - sys_interval is deprecated, use 'plugins' to define configuration
+[2026-08-11 22:05:15,774] :: WARNING - 'auth' and 'topic-check' are deprecated, use 'plugins' to define configuration
+[2026-08-11 22:05:15,775] :: WARNING - Loading plugins from config will ignore 'auth' section of config
+[2026-08-11 22:05:15,775] :: INFO - Loading plugins from config
+[2026-08-11 22:05:15,836] :: INFO - Listener 'default' bind to 0.0.0.0:1883 (max_connections=0)
+[2026-08-11 22:05:15,837] :: INFO - Starting session expiration monitor.
+[2026-08-11 22:05:17,866] :: INFO - Listener 'default': 1/¡Þ connections acquired
+[2026-08-11 22:05:17,866] :: INFO - Connection from 127.0.0.1:63766 on listener 'default'
+[2026-08-11 22:09:12,830] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 22:09:12,852] :: INFO - Connection from 10.35.253.34:58679 on listener 'default'
+[2026-08-11 22:09:23,374] :: INFO - Listener 'default': 1/¡Þ connections acquired
+[2026-08-11 22:09:23,682] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 22:09:23,684] :: INFO - Connection from 10.35.253.34:58680 on listener 'default'
+[2026-08-11 23:16:41,470] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:16:41,472] :: INFO - Connection from 10.35.253.34:49957 on listener 'default'
+[2026-08-11 23:16:52,225] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:16:52,327] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:16:52,329] :: INFO - Connection from 10.35.253.34:49958 on listener 'default'
+[2026-08-11 23:17:03,170] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:17:03,591] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:17:03,592] :: INFO - Connection from 10.35.253.34:49959 on listener 'default'
+[2026-08-11 23:17:14,236] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:17:14,332] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:17:14,334] :: INFO - Connection from 10.35.253.34:49960 on listener 'default'
+[2026-08-11 23:17:25,391] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:17:25,696] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:17:25,698] :: INFO - Connection from 10.35.253.34:49961 on listener 'default'
+[2026-08-11 23:17:36,207] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:17:36,462] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:17:36,464] :: INFO - Connection from 10.35.253.34:49962 on listener 'default'
+[2026-08-11 23:17:47,199] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:17:47,520] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:17:47,523] :: INFO - Connection from 10.35.253.34:49963 on listener 'default'
+[2026-08-11 23:17:58,264] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:17:58,291] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:17:58,292] :: INFO - Connection from 10.35.253.34:49964 on listener 'default'
+[2026-08-11 23:18:09,219] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:18:09,486] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:18:09,487] :: INFO - Connection from 10.35.253.34:49965 on listener 'default'
+[2026-08-11 23:18:20,392] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:18:20,583] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:18:20,585] :: INFO - Connection from 10.35.253.34:49966 on listener 'default'
+[2026-08-11 23:18:31,348] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:18:31,379] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:18:31,380] :: INFO - Connection from 10.35.253.34:49967 on listener 'default'
+[2026-08-11 23:18:42,324] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:18:42,631] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:18:42,633] :: INFO - Connection from 10.35.253.34:49968 on listener 'default'
+[2026-08-11 23:18:53,364] :: INFO - Listener 'default': 2/¡Þ connections acquired
+[2026-08-11 23:18:53,876] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:18:53,878] :: INFO - Connection from 10.35.253.34:49969 on listener 'default'
+[2026-08-11 23:24:39,254] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:24:39,276] :: INFO - Connection from 10.35.253.34:62905 on listener 'default'
+[2026-08-11 23:24:49,851] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:24:50,192] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:24:50,194] :: INFO - Connection from 10.35.253.34:62906 on listener 'default'
+[2026-08-11 23:25:00,862] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:25:01,171] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:25:01,173] :: INFO - Connection from 10.35.253.34:62907 on listener 'default'
+[2026-08-11 23:25:08,859] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:25:12,960] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:25:12,974] :: INFO - Connection from 10.35.253.34:62909 on listener 'default'
+[2026-08-11 23:25:24,001] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:25:24,319] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:25:24,321] :: INFO - Connection from 10.35.253.34:62910 on listener 'default'
+[2026-08-11 23:25:34,867] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:25:35,268] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:25:35,270] :: INFO - Connection from 10.35.253.34:62911 on listener 'default'
+[2026-08-11 23:25:38,646] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:25:45,817] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:25:45,838] :: INFO - Connection from 10.35.253.34:62913 on listener 'default'
+[2026-08-11 23:25:56,671] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:25:57,078] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:25:57,080] :: INFO - Connection from 10.35.253.34:62914 on listener 'default'
+[2026-08-11 23:26:07,832] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:26:08,146] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:26:08,148] :: INFO - Connection from 10.35.253.34:62915 on listener 'default'
+[2026-08-11 23:26:09,062] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:26:18,785] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:26:18,808] :: INFO - Connection from 10.35.253.34:62917 on listener 'default'
+[2026-08-11 23:26:29,539] :: INFO - Listener 'default': 3/¡Þ connections acquired
+[2026-08-11 23:26:29,945] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:26:29,948] :: INFO - Connection from 10.35.253.34:62918 on listener 'default'
+[2026-08-11 23:46:13,776] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:46:13,777] :: INFO - Connection from 10.35.253.34:56028 on listener 'default'
+[2026-08-11 23:46:24,307] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:46:24,613] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:46:24,615] :: INFO - Connection from 10.35.253.34:56029 on listener 'default'
+[2026-08-11 23:46:35,485] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:46:35,689] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:46:35,692] :: INFO - Connection from 10.35.253.34:56030 on listener 'default'
+[2026-08-11 23:46:46,341] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:46:46,546] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:46:46,548] :: INFO - Connection from 10.35.253.34:56031 on listener 'default'
+[2026-08-11 23:46:57,296] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:46:57,604] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:46:57,606] :: INFO - Connection from 10.35.253.34:56032 on listener 'default'
+[2026-08-11 23:47:08,253] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:47:08,355] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:47:08,357] :: INFO - Connection from 10.35.253.34:56033 on listener 'default'
+[2026-08-11 23:47:19,316] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:47:19,717] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:47:19,719] :: INFO - Connection from 10.35.253.34:56034 on listener 'default'
+[2026-08-11 23:47:30,371] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:47:30,781] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:47:30,783] :: INFO - Connection from 10.35.253.34:56035 on listener 'default'
+[2026-08-11 23:47:41,327] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:47:41,639] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:47:41,640] :: INFO - Connection from 10.35.253.34:56036 on listener 'default'
+[2026-08-11 23:47:52,187] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:47:52,490] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:47:52,492] :: INFO - Connection from 10.35.253.34:56037 on listener 'default'
+[2026-08-11 23:48:03,135] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:48:03,551] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:48:03,553] :: INFO - Connection from 10.35.253.34:56038 on listener 'default'
+[2026-08-11 23:48:14,156] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:48:14,262] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:48:14,264] :: INFO - Connection from 10.35.253.34:56039 on listener 'default'
+[2026-08-11 23:48:25,156] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:48:25,560] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:48:25,563] :: INFO - Connection from 10.35.253.34:56040 on listener 'default'
+[2026-08-11 23:48:36,111] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:48:36,522] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:48:36,524] :: INFO - Connection from 10.35.253.34:56041 on listener 'default'
+[2026-08-11 23:48:47,171] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:48:47,376] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:48:47,377] :: INFO - Connection from 10.35.253.34:56042 on listener 'default'
+[2026-08-11 23:48:58,028] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:48:58,340] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:48:58,342] :: INFO - Connection from 10.35.253.34:56043 on listener 'default'
+[2026-08-11 23:49:08,982] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:49:09,392] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:49:09,394] :: INFO - Connection from 10.35.253.34:56044 on listener 'default'
+[2026-08-11 23:49:20,041] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:49:20,344] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:49:20,346] :: INFO - Connection from 10.35.253.34:56045 on listener 'default'
+[2026-08-11 23:49:30,998] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:49:31,058] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:49:31,058] :: INFO - Connection from 10.35.253.34:56046 on listener 'default'
+[2026-08-11 23:49:41,957] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:49:42,159] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:49:42,161] :: INFO - Connection from 10.35.253.34:56047 on listener 'default'
+[2026-08-11 23:49:52,912] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:49:53,320] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:49:53,322] :: INFO - Connection from 10.35.253.34:56048 on listener 'default'
+[2026-08-11 23:50:03,970] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:50:04,385] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:50:04,386] :: INFO - Connection from 10.35.253.34:56049 on listener 'default'
+[2026-08-11 23:50:15,027] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:50:15,433] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:50:15,435] :: INFO - Connection from 10.35.253.34:56050 on listener 'default'
+[2026-08-11 23:50:26,185] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:50:26,493] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:50:26,495] :: INFO - Connection from 10.35.253.34:56051 on listener 'default'
+[2026-08-11 23:50:37,143] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:50:37,554] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:50:37,557] :: INFO - Connection from 10.35.253.34:56052 on listener 'default'
+[2026-08-11 23:50:48,211] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:50:48,413] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:50:48,415] :: INFO - Connection from 10.35.253.34:56053 on listener 'default'
+[2026-08-11 23:50:59,159] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:50:59,466] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:50:59,467] :: INFO - Connection from 10.35.253.34:56054 on listener 'default'
+[2026-08-11 23:51:10,090] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:51:10,534] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:51:10,536] :: INFO - Connection from 10.35.253.34:56055 on listener 'default'
+[2026-08-11 23:51:21,072] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:51:21,101] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:51:21,102] :: INFO - Connection from 10.35.253.34:56056 on listener 'default'
+[2026-08-11 23:51:32,027] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:51:32,129] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:51:32,131] :: INFO - Connection from 10.35.253.34:56057 on listener 'default'
+[2026-08-11 23:51:42,832] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:51:43,293] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:51:43,294] :: INFO - Connection from 10.35.253.34:56058 on listener 'default'
+[2026-08-11 23:51:53,735] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:51:54,047] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:51:54,049] :: INFO - Connection from 10.35.253.34:56059 on listener 'default'
+[2026-08-11 23:52:04,694] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:52:05,002] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:52:05,004] :: INFO - Connection from 10.35.253.34:56060 on listener 'default'
+[2026-08-11 23:52:15,548] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:52:15,577] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:52:15,579] :: INFO - Connection from 10.35.253.34:56061 on listener 'default'
+[2026-08-11 23:52:26,405] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:52:26,710] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:52:26,711] :: INFO - Connection from 10.35.253.34:56062 on listener 'default'
+[2026-08-11 23:52:37,248] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:52:37,400] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:52:37,402] :: INFO - Connection from 10.35.253.34:56063 on listener 'default'
+[2026-08-11 23:52:48,219] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:52:48,625] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:52:48,627] :: INFO - Connection from 10.35.253.34:56064 on listener 'default'
+[2026-08-11 23:52:59,272] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:52:59,683] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:52:59,685] :: INFO - Connection from 10.35.253.34:56065 on listener 'default'
+[2026-08-11 23:53:10,259] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:53:10,441] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:53:10,443] :: INFO - Connection from 10.35.253.34:56066 on listener 'default'
+[2026-08-11 23:53:21,286] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:53:21,704] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:53:21,706] :: INFO - Connection from 10.35.253.34:56067 on listener 'default'
+[2026-08-11 23:53:32,132] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:53:32,555] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:53:32,557] :: INFO - Connection from 10.35.253.34:56068 on listener 'default'
+[2026-08-11 23:53:43,203] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:53:43,824] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:53:43,826] :: INFO - Connection from 10.35.253.34:56069 on listener 'default'
+[2026-08-11 23:53:53,960] :: WARNING - [MQTT-3.1.0-1] (client @=10.35.253.34:56069): Can't read first packet as CONNECT: Invalid fixed packet type 3 for ConnectPacket init
+[2026-08-11 23:53:53,981] :: WARNING - Failed to initialize client session: Invalid fixed packet type 3 for ConnectPacket init
+[2026-08-11 23:53:53,981] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:53:54,260] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:53:54,262] :: INFO - Connection from 10.35.253.34:56070 on listener 'default'
+[2026-08-11 23:54:04,907] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:54:05,220] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:54:05,222] :: INFO - Connection from 10.35.253.34:56071 on listener 'default'
+[2026-08-11 23:54:15,969] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:54:16,279] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:54:16,282] :: INFO - Connection from 10.35.253.34:56072 on listener 'default'
+[2026-08-11 23:54:27,028] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:54:27,335] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:54:27,338] :: INFO - Connection from 10.35.253.34:56073 on listener 'default'
+[2026-08-11 23:54:37,994] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:54:38,051] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:54:38,052] :: INFO - Connection from 10.35.253.34:56074 on listener 'default'
+[2026-08-11 23:54:48,939] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:54:49,207] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:54:49,209] :: INFO - Connection from 10.35.253.34:56075 on listener 'default'
+[2026-08-11 23:54:59,919] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:55:00,110] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:55:00,111] :: INFO - Connection from 10.35.253.34:56076 on listener 'default'
+[2026-08-11 23:55:10,854] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:55:11,163] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:55:11,165] :: INFO - Connection from 10.35.253.34:56077 on listener 'default'
+[2026-08-11 23:55:21,811] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:55:22,333] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:55:22,335] :: INFO - Connection from 10.35.253.34:56078 on listener 'default'
+[2026-08-11 23:55:32,731] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:55:33,051] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:55:33,053] :: INFO - Connection from 10.35.253.34:56079 on listener 'default'
+[2026-08-11 23:55:43,724] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:55:43,753] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:55:43,754] :: INFO - Connection from 10.35.253.34:56080 on listener 'default'
+[2026-08-11 23:55:54,790] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:55:54,993] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:55:54,996] :: INFO - Connection from 10.35.253.34:56081 on listener 'default'
+[2026-08-11 23:56:05,840] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:56:05,946] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:56:05,948] :: INFO - Connection from 10.35.253.34:56082 on listener 'default'
+[2026-08-11 23:56:07,175] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:56:16,904] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:56:17,014] :: INFO - Connection from 10.35.253.34:56084 on listener 'default'
+[2026-08-11 23:56:27,451] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:56:28,174] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:56:28,176] :: INFO - Connection from 10.35.253.34:56085 on listener 'default'
+[2026-08-11 23:56:37,174] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:56:41,482] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:56:41,504] :: INFO - Connection from 10.35.253.34:56087 on listener 'default'
+[2026-08-11 23:56:52,124] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:56:52,538] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:56:52,540] :: INFO - Connection from 10.35.253.34:56088 on listener 'default'
+[2026-08-11 23:57:03,185] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:57:03,218] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:57:03,219] :: INFO - Connection from 10.35.253.34:56089 on listener 'default'
+[2026-08-11 23:57:14,243] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:57:14,453] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:57:14,455] :: INFO - Connection from 10.35.253.34:56090 on listener 'default'
+[2026-08-11 23:57:25,006] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:57:25,306] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:57:25,308] :: INFO - Connection from 10.35.253.34:56091 on listener 'default'
+[2026-08-11 23:57:35,964] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:57:36,361] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:57:36,363] :: INFO - Connection from 10.35.253.34:56092 on listener 'default'
+[2026-08-11 23:57:46,909] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:57:47,218] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:57:47,220] :: INFO - Connection from 10.35.253.34:56093 on listener 'default'
+[2026-08-11 23:57:58,070] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:57:58,285] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:57:58,288] :: INFO - Connection from 10.35.253.34:56094 on listener 'default'
+[2026-08-11 23:58:08,925] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:58:09,128] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:58:09,130] :: INFO - Connection from 10.35.253.34:56095 on listener 'default'
+[2026-08-11 23:58:19,863] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:58:19,997] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:58:19,998] :: INFO - Connection from 10.35.253.34:56096 on listener 'default'
+[2026-08-11 23:58:30,736] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:58:30,850] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:58:30,852] :: INFO - Connection from 10.35.253.34:56097 on listener 'default'
+[2026-08-11 23:58:41,694] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:58:41,998] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:58:42,000] :: INFO - Connection from 10.35.253.34:56098 on listener 'default'
+[2026-08-11 23:58:52,750] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:58:52,861] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:58:52,863] :: INFO - Connection from 10.35.253.34:56099 on listener 'default'
+[2026-08-11 23:59:03,708] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:59:03,811] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:59:03,812] :: INFO - Connection from 10.35.253.34:56100 on listener 'default'
+[2026-08-11 23:59:14,689] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:59:15,176] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:59:15,178] :: INFO - Connection from 10.35.253.34:56101 on listener 'default'
+[2026-08-11 23:59:25,620] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:59:25,932] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:59:25,934] :: INFO - Connection from 10.35.253.34:56102 on listener 'default'
+[2026-08-11 23:59:36,618] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:59:36,908] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:59:36,910] :: INFO - Connection from 10.35.253.34:56103 on listener 'default'
+[2026-08-11 23:59:47,636] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:59:48,148] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:59:48,150] :: INFO - Connection from 10.35.253.34:56104 on listener 'default'
+[2026-08-11 23:59:58,696] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-11 23:59:59,113] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-11 23:59:59,115] :: INFO - Connection from 10.35.253.34:56105 on listener 'default'
+[2026-08-12 00:00:09,553] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:00:09,960] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:00:09,962] :: INFO - Connection from 10.35.253.34:56106 on listener 'default'
+[2026-08-12 00:00:20,465] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:00:20,822] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:00:20,824] :: INFO - Connection from 10.35.253.34:56107 on listener 'default'
+[2026-08-12 00:00:31,364] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:00:31,670] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:00:31,671] :: INFO - Connection from 10.35.253.34:56108 on listener 'default'
+[2026-08-12 00:00:42,522] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:00:42,545] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:00:42,545] :: INFO - Connection from 10.35.253.34:56109 on listener 'default'
+[2026-08-12 00:00:53,377] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:00:53,793] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:00:53,795] :: INFO - Connection from 10.35.253.34:56110 on listener 'default'
+[2026-08-12 00:01:04,334] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:01:04,649] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:01:04,651] :: INFO - Connection from 10.35.253.34:56111 on listener 'default'
+[2026-08-12 00:01:15,291] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:01:15,503] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:01:15,505] :: INFO - Connection from 10.35.253.34:56112 on listener 'default'
+[2026-08-12 00:01:26,253] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:01:26,578] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:01:26,580] :: INFO - Connection from 10.35.253.34:56113 on listener 'default'
+[2026-08-12 00:01:37,205] :: INFO - Listener 'default': 4/¡Þ connections acquired
+[2026-08-12 00:01:37,619] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:01:37,621] :: INFO - Connection from 10.35.253.34:56114 on listener 'default'
+[2026-08-12 00:04:36,676] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:04:36,697] :: INFO - Connection from 10.35.253.34:55585 on listener 'default'
+[2026-08-12 00:04:47,464] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:04:47,666] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:04:47,668] :: INFO - Connection from 10.35.253.34:55586 on listener 'default'
+[2026-08-12 00:04:58,417] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:04:58,724] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:04:58,726] :: INFO - Connection from 10.35.253.34:55587 on listener 'default'
+[2026-08-12 00:05:09,383] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:05:09,479] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:05:09,481] :: INFO - Connection from 10.35.253.34:55588 on listener 'default'
+[2026-08-12 00:05:20,435] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:05:20,541] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:05:20,543] :: INFO - Connection from 10.35.253.34:55589 on listener 'default'
+[2026-08-12 00:05:31,391] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:05:31,493] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:05:31,494] :: INFO - Connection from 10.35.253.34:55590 on listener 'default'
+[2026-08-12 00:05:42,348] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:05:42,385] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:05:42,385] :: INFO - Connection from 10.35.253.34:55591 on listener 'default'
+[2026-08-12 00:05:53,302] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:05:53,341] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:05:53,342] :: INFO - Connection from 10.35.253.34:55592 on listener 'default'
+[2026-08-12 00:06:04,260] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:06:04,465] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:06:04,467] :: INFO - Connection from 10.35.253.34:55593 on listener 'default'
+[2026-08-12 00:06:15,216] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:06:15,523] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:06:15,525] :: INFO - Connection from 10.35.253.34:55594 on listener 'default'
+[2026-08-12 00:06:26,072] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:06:26,380] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:06:26,382] :: INFO - Connection from 10.35.253.34:55595 on listener 'default'
+[2026-08-12 00:06:37,036] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:06:37,351] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:06:37,354] :: INFO - Connection from 10.35.253.34:55596 on listener 'default'
+[2026-08-12 00:06:47,985] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:06:48,430] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:06:48,432] :: INFO - Connection from 10.35.253.34:55597 on listener 'default'
+[2026-08-12 00:06:58,905] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:06:58,964] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:06:58,966] :: INFO - Connection from 10.35.253.34:55598 on listener 'default'
+[2026-08-12 00:07:09,900] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:07:09,999] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:07:10,001] :: INFO - Connection from 10.35.253.34:55599 on listener 'default'
+[2026-08-12 00:07:20,954] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:07:21,268] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:07:21,270] :: INFO - Connection from 10.35.253.34:55600 on listener 'default'
+[2026-08-12 00:07:31,914] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:07:32,425] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:07:32,427] :: INFO - Connection from 10.35.253.34:55601 on listener 'default'
+[2026-08-12 00:07:42,872] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:07:43,040] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:07:43,042] :: INFO - Connection from 10.35.253.34:55602 on listener 'default'
+[2026-08-12 00:07:53,696] :: INFO - Listener 'default': 5/¡Þ connections acquired
+[2026-08-12 00:07:53,811] :: INFO - Listener 'default': 6/¡Þ connections acquired
+[2026-08-12 00:07:53,813] :: INFO - Connection from 10.35.253.34:55603 on listener 'default'
+[2026-08-12 00:08:32,331] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:08:32,353] :: INFO - Connection from 10.35.253.34:52120 on listener 'default'
+[2026-08-12 00:10:47,289] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:10:47,291] :: INFO - Connection from 10.35.253.34:62730 on listener 'default'
+[2026-08-12 00:10:57,743] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:10:57,857] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:10:57,859] :: INFO - Connection from 10.35.253.34:62731 on listener 'default'
+[2026-08-12 00:11:08,795] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:11:08,824] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:11:08,825] :: INFO - Connection from 10.35.253.34:62732 on listener 'default'
+[2026-08-12 00:11:19,695] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:11:20,262] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:11:20,264] :: INFO - Connection from 10.35.253.34:62733 on listener 'default'
+[2026-08-12 00:11:30,731] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:11:31,116] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:11:31,118] :: INFO - Connection from 10.35.253.34:62734 on listener 'default'
+[2026-08-12 00:11:41,664] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:11:41,884] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:11:41,886] :: INFO - Connection from 10.35.253.34:62735 on listener 'default'
+[2026-08-12 00:11:52,583] :: INFO - Listener 'default': 7/¡Þ connections acquired
+[2026-08-12 00:11:52,684] :: INFO - Listener 'default': 8/¡Þ connections acquired
+[2026-08-12 00:11:52,686] :: INFO - Connection from 10.35.253.34:62736 on listener 'default'
+[2026-08-12 00:20:52,054] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:20:52,056] :: INFO - Connection from 10.35.253.34:63144 on listener 'default'
+[2026-08-12 00:21:49,702] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:21:49,704] :: INFO - Connection from 10.35.253.34:51930 on listener 'default'
+[2026-08-12 00:22:11,004] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:22:11,417] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:22:11,419] :: INFO - Connection from 10.35.253.34:51931 on listener 'default'
+[2026-08-12 00:22:18,917] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:25:43,655] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:25:43,763] :: INFO - Connection from 10.35.253.34:63491 on listener 'default'
+[2026-08-12 00:25:54,231] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:25:54,337] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:25:54,338] :: INFO - Connection from 10.35.253.34:63492 on listener 'default'
+[2026-08-12 00:26:05,064] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:26:05,510] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:26:05,512] :: INFO - Connection from 10.35.253.34:63493 on listener 'default'
+[2026-08-12 00:26:13,074] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:26:18,001] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:26:18,003] :: INFO - Connection from 10.35.253.34:63495 on listener 'default'
+[2026-08-12 00:26:38,877] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:26:39,185] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:26:39,187] :: INFO - Connection from 10.35.253.34:63496 on listener 'default'
+[2026-08-12 00:26:43,181] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:38:27,485] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:38:27,569] :: INFO - Connection from 10.35.253.34:58838 on listener 'default'
+[2026-08-12 00:38:30,444] :: ERROR - No data from (client @=10.35.253.34:58838) : No more data
+[2026-08-12 00:38:30,466] :: WARNING - Failed to initialize client session: No more data
+[2026-08-12 00:38:30,466] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:38:36,713] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:38:36,715] :: INFO - Connection from 10.35.253.34:58839 on listener 'default'
+[2026-08-12 00:38:47,354] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:38:47,649] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:38:47,651] :: INFO - Connection from 10.35.253.34:58840 on listener 'default'
+[2026-08-12 00:38:55,842] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:39:00,760] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:39:00,782] :: INFO - Connection from 10.35.253.34:58842 on listener 'default'
+[2026-08-12 00:39:11,302] :: INFO - Listener 'default': 9/¡Þ connections acquired
+[2026-08-12 00:39:11,407] :: INFO - Listener 'default': 10/¡Þ connections acquired
+[2026-08-12 00:39:11,409] :: INFO - Connection from 10.35.253.34:58843 on listener 'default'
+[2026-08-12 00:39:41,100] :: INFO - Listener 'default': 11/¡Þ connections acquired
+[2026-08-12 00:39:41,123] :: INFO - Connection from 10.35.253.34:63281 on listener 'default'
